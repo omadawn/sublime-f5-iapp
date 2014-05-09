@@ -2,8 +2,9 @@
 ---
 name: F5 iApp Implementation
 scopeName: source.iapp_impl
-fileTypes: [iapp, iapp_impl]
+fileTypes: [iappl, iapp_impl]
 uuid: e998b591-e630-4583-86bd-b5714d50dd79
+
 firstLineMatch: '^package require iapp '
 foldingEndMarker: ^\s*\}
 foldingStartMarker: \{\s*$
