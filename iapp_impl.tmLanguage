@@ -4,7 +4,7 @@
 <dict>
 	<key>fileTypes</key>
 	<array>
-		<string>iappl</string>
+		<string>iappi</string>
 		<string>iapp_impl</string>
 	</array>
 	<key>firstLineMatch</key>
