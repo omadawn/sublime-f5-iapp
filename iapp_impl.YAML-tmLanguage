@@ -29,10 +29,10 @@ patterns:
     '1': {name: keyword.other.iapp}
   match: (?<=^|[\[{;])\s*(iapp::(is|conf|debug|tmsh_create|substa|template))\b
 - captures:
-    '1': {name: variable.language.iapp} 
+    '1': {name: variable.language.iapp}
   match: (\$tmsh::app_name)
 - captures:
-    '1': {name: variable.parameter.iapp} 
+    '1': {name: variable.parameter.iapp}
   match: ((\$|\[set\\s+)?::([A-Za-z_][A-Za-z0-9_-]*[^_]|[A-Za-z][A-Za-z0-9]*)__[A-Za-z][A-Za-z0-9_-]*)
 - begin: (?<=^|[\[{;])\s*(regexp|regsub)\b\s*
   beginCaptures:
