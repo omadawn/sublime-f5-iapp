@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>fileTypes</key>
+	<array>
+		<string>iappm</string>
+		<string>iapp_macro</string>
+	</array>
+	<key>name</key>
+	<string>F5 iApp Macro</string>
+	<key>patterns</key>
+	<array>
+		<dict>
+			<key>begin</key>
+			<string>&lt;\%=[\t ]*</string>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>variable.parameter.iappm</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>[\t ]*\%&gt;</string>
+			<key>name</key>
+			<string>variable.parameter.iappm</string>
+		</dict>
+		<dict>
+			<key>begin</key>
+			<string>&lt;\%[\t ]*</string>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.iappm</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>[\t ]*\%&gt;</string>
+			<key>name</key>
+			<string>keyword.control.iappm</string>
+		</dict>
+	</array>
+	<key>scopeName</key>
+	<string>source.iapp_impl</string>
+	<key>uuid</key>
+	<string>9d4d0087-24ff-4519-b8cd-8a4e995e88b7</string>
+</dict>
+</plist>
