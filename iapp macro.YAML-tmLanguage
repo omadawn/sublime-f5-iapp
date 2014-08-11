@@ -6,13 +6,52 @@ fileTypes: [iappm, iapp_macro]
 uuid: 9d4d0087-24ff-4519-b8cd-8a4e995e88b7
 
 patterns:
-- name: variable.parameter.iappm
-  begin: '<\%=[\t ]*'
-  captures:
-    '0': {name: variable.parameter.iappm}
-  end: '[\t ]*\%>'
-- name: keyword.control.iappm
-  begin: '<\%[\t ]*'
-  captures:
-    '0': {name: keyword.control.iappm}
-  end: '[\t ]*\%>'
+- name: macro.iapp
+  begin: '^([A-Za-z_]\w*)\s*(\{)$'
+  beginCaptures:
+    '0': {name: entity.name.function.iapp}
+  patterns:
+    - {include: '#braces'}
+  end: '^\}'
+  endCaptures:
+    '0': {name: entity.name.function.iapp}
+repository:
+  braces:
+    begin: (?:^|(?<=\s))\{
+    comment: matches a single brace-enclosed word
+    end: \}([^\s\]]*)
+    endCaptures:
+      '1': {name: invalid.illegal.iapp}
+    patterns:
+    - {match: '\\[{}\n]', name: constant.character.escape.iapp}
+    - {include: '#macro-variable'}
+    - {include: '#macro-code'}
+    - {include: '#inner-braces'}
+  inner-braces:
+    begin: '\{'
+    comment: matches a nested brace in a brace-enclosed word
+    end: '\}'
+    patterns:
+    - {include: '#macro-variable'}
+    - {include: '#macro-code'}
+    - {match: '\\[{}\n]', name: constant.character.escape.iappm}
+    - {include: '#inner-braces'}
+  macro-variable:
+    begin: '<\%=\s*'
+    captures:
+      '0': {name: variable.parameter.iappm}
+    patterns:
+    - {include: '#variable'}
+    end: '\s*\%>'
+  macro-code:
+    begin: '<\%\s*'
+    captures:
+      '0': {name: keyword.control.iappm}
+    patterns:
+    - {match: '(\%[^>]|[^%]>|[^%>])*', name: keyword.control.iappm}
+    end: '\%>'
+  variable:
+    captures:
+      '1': {name: punctuation.definition.variable.iappm}
+    match: (\$)((?:[a-zA-Z0-9_]|::)+(\([^\)]+\))?|\{[^\}]*\})
+    name: variable.parameter.iappm

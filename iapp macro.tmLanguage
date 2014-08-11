@@ -13,23 +13,110 @@
 	<array>
 		<dict>
 			<key>begin</key>
-			<string>&lt;\%=[\t ]*</string>
-			<key>captures</key>
+			<string>^([A-Za-z_]\w*)\s*(\{)$</string>
+			<key>beginCaptures</key>
 			<dict>
 				<key>0</key>
 				<dict>
 					<key>name</key>
-					<string>variable.parameter.iappm</string>
+					<string>entity.name.function.iapp</string>
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>[\t ]*\%&gt;</string>
+			<string>^\}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>entity.name.function.iapp</string>
+				</dict>
+			</dict>
 			<key>name</key>
-			<string>variable.parameter.iappm</string>
+			<string>macro.iapp</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#braces</string>
+				</dict>
+			</array>
 		</dict>
+	</array>
+	<key>repository</key>
+	<dict>
+		<key>braces</key>
 		<dict>
 			<key>begin</key>
-			<string>&lt;\%[\t ]*</string>
+			<string>(?:^|(?&lt;=\s))\{</string>
+			<key>comment</key>
+			<string>matches a single brace-enclosed word</string>
+			<key>end</key>
+			<string>\}([^\s\]]*)</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>invalid.illegal.iapp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>\\[{}\n]</string>
+					<key>name</key>
+					<string>constant.character.escape.iapp</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#macro-variable</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#macro-code</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#inner-braces</string>
+				</dict>
+			</array>
+		</dict>
+		<key>inner-braces</key>
+		<dict>
+			<key>begin</key>
+			<string>\{</string>
+			<key>comment</key>
+			<string>matches a nested brace in a brace-enclosed word</string>
+			<key>end</key>
+			<string>\}</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#macro-variable</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#macro-code</string>
+				</dict>
+				<dict>
+					<key>match</key>
+					<string>\\[{}\n]</string>
+					<key>name</key>
+					<string>constant.character.escape.iappm</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#inner-braces</string>
+				</dict>
+			</array>
+		</dict>
+		<key>macro-code</key>
+		<dict>
+			<key>begin</key>
+			<string>&lt;\%\s*</string>
 			<key>captures</key>
 			<dict>
 				<key>0</key>
@@ -39,11 +126,55 @@
 				</dict>
 			</dict>
 			<key>end</key>
-			<string>[\t ]*\%&gt;</string>
-			<key>name</key>
-			<string>keyword.control.iappm</string>
+			<string>\%&gt;</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>match</key>
+					<string>(\%[^&gt;]|[^%]&gt;|[^%&gt;])*</string>
+					<key>name</key>
+					<string>keyword.control.iappm</string>
+				</dict>
+			</array>
 		</dict>
-	</array>
+		<key>macro-variable</key>
+		<dict>
+			<key>begin</key>
+			<string>&lt;\%=\s*</string>
+			<key>captures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>variable.parameter.iappm</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>\s*\%&gt;</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#variable</string>
+				</dict>
+			</array>
+		</dict>
+		<key>variable</key>
+		<dict>
+			<key>captures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.variable.iappm</string>
+				</dict>
+			</dict>
+			<key>match</key>
+			<string>(\$)((?:[a-zA-Z0-9_]|::)+(\([^\)]+\))?|\{[^\}]*\})</string>
+			<key>name</key>
+			<string>variable.parameter.iappm</string>
+		</dict>
+	</dict>
 	<key>scopeName</key>
 	<string>source.iapp_impl</string>
 	<key>uuid</key>
