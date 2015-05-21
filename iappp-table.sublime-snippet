@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[table ${1:name} {
+	$0
+}
+]]></content>
+    <tabTrigger>table</tabTrigger>
+    <scope>source.iapp.presentation</scope>
+    <description>table...</description>
+</snippet>

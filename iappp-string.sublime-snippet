@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[string ${1:name} ${2:default "$3"} ${4:display "$5"} ${6:validator "$7"} ${7:required} } {
+	$0
+}
+]]></content>
+    <tabTrigger>string</tabTrigger>
+    <scope>source.iapp.presentation</scope>
+    <description>string...</description>
+</snippet>

@@ -1,0 +1,9 @@
+<snippet>
+    <content><![CDATA[editchoice ${1:name} ${2:default "$3"} ${4:display "$5"} ${6:tcl} {
+	$0
+}
+]]></content>
+    <tabTrigger>editchoice</tabTrigger>
+    <scope>source.iapp.presentation</scope>
+    <description>editchoice...</description>
+</snippet>
