@@ -8,6 +8,10 @@
 		<string>iapp_pres</string>
 		<string>iapp_presentation</string>
 	</array>
+	<key>foldingEndMarker</key>
+	<string>^\s*\}</string>
+	<key>foldingStartMarker</key>
+	<string>\{\s*$</string>
 	<key>name</key>
 	<string>F5 iApp Presentation</string>
 	<key>patterns</key>
@@ -30,71 +34,291 @@
 			<string>^\s*(include)\s+("?[A-Za-z_][A-Za-z0-9_-]*)\b</string>
 		</dict>
 		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.control.iappp</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.section.iappp</string>
-				</dict>
-			</dict>
-			<key>match</key>
-			<string>^\s*(section)\s+("?[A-Za-z_][A-Za-z0-9_-]*)\b</string>
+			<key>include</key>
+			<string>#top-level-objects</string>
 		</dict>
+	</array>
+	<key>repository</key>
+	<dict>
+		<key>all-strings</key>
 		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
+			<key>patterns</key>
+			<array>
 				<dict>
-					<key>name</key>
-					<string>keyword.other.iappp</string>
+					<key>include</key>
+					<string>#double-strings</string>
 				</dict>
-			</dict>
-			<key>match</key>
-			<string>^\s*(text)\b</string>
+				<dict>
+					<key>include</key>
+					<string>#braces</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#brace-lists</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#bare-strings</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#strings</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#comments</string>
+				</dict>
+			</array>
 		</dict>
+		<key>brace-lists</key>
 		<dict>
-			<key>captures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>keyword.control.iappp</string>
-				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>entity.name.tag.iappp</string>
-				</dict>
-			</dict>
-			<key>match</key>
-			<string>^\s*(choice|row|table|editchoice|multichoice|message|optional|string)\s+([A-Za-z_][A-Za-z0-9_-]*)\b</string>
-		</dict>
-		<dict>
-			<key>captures</key>
+			<key>begin</key>
+			<string>\{</string>
+			<key>beginCaptures</key>
 			<dict>
 				<key>0</key>
 				<dict>
 					<key>name</key>
-					<string>comment.iappp</string>
+					<string>punctuation.definition.brace-list.begin.iappp</string>
 				</dict>
 			</dict>
-			<key>match</key>
-			<string>^\s*#</string>
+			<key>comment</key>
+			<string>Matches a brace defined list.</string>
+			<key>end</key>
+			<string>\}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.definition.brace-list.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#all-strings</string>
+				</dict>
+			</array>
 		</dict>
+		<key>choice-types</key>
 		<dict>
-			<key>include</key>
-			<string>#escape</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#choices</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#editchoices</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#multichoices</string>
+				</dict>
+			</array>
 		</dict>
+		<key>choices</key>
 		<dict>
-			<key>include</key>
-			<string>#variable</string>
+			<key>begin</key>
+			<string>(?&lt;=(?:^|\s|\"|\}))(choice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.choice.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.choice.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Choices produce a pull down list of selectable options.</string>
+			<key>end</key>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=}))</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>storage.section.choice.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#displays</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#defaults</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tcl-databindings</string>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.choice.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#double-strings</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
 		</dict>
+		<key>comments</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>comment.line.double-slash.iappp</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.iappp</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>\s*((#).*$\n?)</string>
+				</dict>
+			</array>
+		</dict>
+		<key>defaults</key>
+		<dict>
+			<key>comment</key>
+			<string>The default value presented if no value was previously entered. This can be a string or a Tcl expression.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.default.iappp</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.value</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(default)\s+("[A-Za-z_][A-Za-z0-9_-]*")</string>
+				</dict>
+			</array>
+		</dict>
+		<key>defines</key>
+		<dict>
+			<key>begin</key>
+			<string>(?&lt;=(?:^|\s|\"|\}))(define)\s+(?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional))</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.define.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.define.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Comments allow users to create their own types.</string>
+			<key>end</key>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=}))</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#strings</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#passwords</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#choices</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#editchoices</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#multichoices</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tables</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#rows</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#messages</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#optionals</string>
+				</dict>
+			</array>
+		</dict>
+		<key>displays</key>
+		<dict>
+			<key>comment</key>
+			<string>Gives a hint to the renderer about how this element should be displayed.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.display.iappp</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.value</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(display)\s+("(?:small|medium|large|xlarge|xxlarge)")</string>
+				</dict>
+			</array>
+		</dict>
+		<key>double-strings</key>
 		<dict>
 			<key>begin</key>
 			<string>"</string>
@@ -106,6 +330,8 @@
 					<string>punctuation.definition.string.begin.iappp</string>
 				</dict>
 			</dict>
+			<key>comment</key>
+			<string>Matches double quoted strings</string>
 			<key>end</key>
 			<string>"</string>
 			<key>endCaptures</key>
@@ -122,80 +348,87 @@
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#escape</string>
+					<string>#escapes</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#variable</string>
+					<string>#variables</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#embedded</string>
+					<string>#embeddeds</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#all-strings</string>
 				</dict>
 			</array>
 		</dict>
-	</array>
-	<key>repository</key>
-	<dict>
-		<key>bare-string</key>
+		<key>editchoices</key>
 		<dict>
 			<key>begin</key>
-			<string>(?:^|(?&lt;=\s))"</string>
-			<key>comment</key>
-			<string>matches a single quote-enclosed word without scoping</string>
-			<key>end</key>
-			<string>"([^\s\]]*)</string>
-			<key>endCaptures</key>
+			<string>(?&lt;=(?:^|\s|\"|\}))(editchoice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?</string>
+			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>invalid.illegal.iappp</string>
+					<string>keyword.control.editchoice.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.editchoice.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Editchoices are like choices except the user can also simply type a choice instead of choosing from those available.</string>
+			<key>end</key>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=}))</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>storage.section.editchoice.end.iappp</string>
 				</dict>
 			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>
 					<key>include</key>
-					<string>#escape</string>
+					<string>#comments</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#variable</string>
-				</dict>
-			</array>
-		</dict>
-		<key>braces</key>
-		<dict>
-			<key>begin</key>
-			<string>(?:^|(?&lt;=\s))\{</string>
-			<key>comment</key>
-			<string>matches a single brace-enclosed word</string>
-			<key>end</key>
-			<string>\}([^\s\]]*)</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>invalid.illegal.iappp</string>
-				</dict>
-			</dict>
-			<key>patterns</key>
-			<array>
-				<dict>
-					<key>match</key>
-					<string>\\[{}\n]</string>
-					<key>name</key>
-					<string>constant.character.escape.iappp</string>
+					<string>#displays</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#inner-braces</string>
+					<string>#defaults</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tcl-databindings</string>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.editchoice.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#double-strings</string>
+						</dict>
+					</array>
 				</dict>
 			</array>
 		</dict>
-		<key>embedded</key>
+		<key>embeddeds</key>
 		<dict>
 			<key>begin</key>
 			<string>\[</string>
@@ -204,9 +437,11 @@
 				<key>0</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.section.embedded.begin.iappp</string>
+					<string>punctuation.definition.embedded.begin.iappp</string>
 				</dict>
 			</dict>
+			<key>comment</key>
+			<string>Matches an embeded command</string>
 			<key>end</key>
 			<string>\]</string>
 			<key>endCaptures</key>
@@ -214,7 +449,7 @@
 				<key>0</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.section.embedded.end.iappp</string>
+					<string>punctuation.definition.embedded.end.iappp</string>
 				</dict>
 			</dict>
 			<key>name</key>
@@ -223,40 +458,236 @@
 			<array>
 				<dict>
 					<key>include</key>
-					<string>source.iapp</string>
+					<string>#embeddeds</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#source.iapp</string>
 				</dict>
 			</array>
 		</dict>
-		<key>escape</key>
+		<key>escapes</key>
 		<dict>
 			<key>match</key>
 			<string>\\(\d{1,3}|x[a-fA-F0-9]+|u[a-fA-F0-9]{1,4}|.|\n)</string>
 			<key>name</key>
 			<string>constant.character.escape.iappp</string>
 		</dict>
-		<key>inner-braces</key>
+		<key>messages</key>
 		<dict>
 			<key>begin</key>
-			<string>\{</string>
+			<string>(?&lt;=(?:^|\s|\"|\}))(message)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.message.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.message.iappp</string>
+				</dict>
+			</dict>
 			<key>comment</key>
-			<string>matches a nested brace in a brace-enclosed word</string>
+			<string>Messages display un-editable text to the user.</string>
 			<key>end</key>
-			<string>\}</string>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=\n))</string>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>match</key>
-					<string>\\[{}\n]</string>
-					<key>name</key>
-					<string>constant.character.escape.iappp</string>
-				</dict>
-				<dict>
 					<key>include</key>
-					<string>#inner-braces</string>
+					<string>#double-strings</string>
 				</dict>
 			</array>
 		</dict>
-		<key>regexp</key>
+		<key>multichoices</key>
+		<dict>
+			<key>begin</key>
+			<string>(?&lt;=(?:^|\s|\"|\}))(multichoice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.multichoice.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.multichoice.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Multichoices present two lists of options and allow the user to move items between the lists.</string>
+			<key>end</key>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=}))</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>storage.section.multichoice.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#displays</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#defaults</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#tcl-databindings</string>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.multichoice.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#double-strings</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>optionals</key>
+		<dict>
+			<key>begin</key>
+			<string>\b(optional)\s+(\(.*\))\s+(?=\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.section.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.section.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Optionals cause items to not be displayed unless the defined criteria are met. This defines the optional element except when it's a top level object. I.E. when it's contained within a section (or something else which is contained within a section.)</string>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.section.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.section.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#strings</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#passwords</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#choices</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#editchoices</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#multichoices</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#tables</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#rows</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#messages</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#optionals</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#defines</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>passwords</key>
+		<dict>
+			<key>begin</key>
+			<string>(?&lt;=(?:^|\s|\"|\}))(password)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.string.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.string.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Passwords are like strings except instead of displaying the typed text they obfuscate it. Some systems like the built in logging do their best to not log the contents either.</string>
+			<key>end</key>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=\n))</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#requireds</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#displays</string>
+				</dict>
+			</array>
+		</dict>
+		<key>regexps</key>
 		<dict>
 			<key>begin</key>
 			<string>(?=\S)(?![\n;\]])</string>
@@ -281,15 +712,15 @@
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#bare-string</string>
+							<string>#bare-strings</string>
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#escape</string>
+							<string>#escapes</string>
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#variable</string>
+							<string>#variables</string>
 						</dict>
 					</array>
 				</dict>
@@ -304,15 +735,15 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>#variable</string>
+							<string>#variables</string>
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#embedded</string>
+							<string>#embeddeds</string>
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#escape</string>
+							<string>#escapes</string>
 						</dict>
 						<dict>
 							<key>include</key>
@@ -320,46 +751,471 @@
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>#string</string>
+							<string>#strings</string>
 						</dict>
 					</array>
 				</dict>
 			</array>
 		</dict>
-		<key>string</key>
+		<key>requireds</key>
 		<dict>
-			<key>applyEndPatternLast</key>
-			<integer>1</integer>
-			<key>begin</key>
-			<string>(?:^|(?&lt;=\s))(?=")</string>
 			<key>comment</key>
-			<string>matches a single quote-enclosed word with scoping</string>
-			<key>end</key>
-			<string></string>
-			<key>name</key>
-			<string>string.quoted.double.iappp</string>
+			<string>Makes an object required. Limited usage</string>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>include</key>
-					<string>#bare-string</string>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.required.iappp</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(required)\s*</string>
 				</dict>
 			</array>
 		</dict>
-		<key>variable</key>
+		<key>rows</key>
 		<dict>
-			<key>captures</key>
+			<key>begin</key>
+			<string>\b(row)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)</string>
+			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
 				<dict>
 					<key>name</key>
-					<string>punctuation.definition.variable.iappp</string>
+					<string>keyword.control.table.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.table.iappp</string>
 				</dict>
 			</dict>
-			<key>match</key>
-			<string>(\$)((?:[a-zA-Z0-9_]|::)+(\([^\)]+\))?|\{[^\}]*\})</string>
-			<key>name</key>
-			<string>variable.other.iappp</string>
+			<key>comment</key>
+			<string>Rows cause objects to be displayed side by side instead of on top of one another.</string>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.table.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.table.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#strings</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#passwords</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#choice-types</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>sections</key>
+		<dict>
+			<key>begin</key>
+			<string>\b(section)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.section.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.section.iappp</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.section.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.section.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#strings</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#passwords</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#choices</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#editchoices</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#multichoices</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#tables</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#rows</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#messages</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#optionals</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#defines</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>strings</key>
+		<dict>
+			<key>begin</key>
+			<string>(?&lt;=(?:^|\s|\"|\}))(string)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.string.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.string.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Strings are single text boxes which take user input.</string>
+			<key>end</key>
+			<string>((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?&lt;=\n))</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#validators</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#requireds</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#displays</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#defaults</string>
+				</dict>
+			</array>
+		</dict>
+		<key>tables</key>
+		<dict>
+			<key>begin</key>
+			<string>\b(table)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.table.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.table.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Tables group other objects together in a way that allows users to add additional lines. They are like rows which can be extended.</string>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.table.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.table.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#strings</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#passwords</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#choice-types</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>tcl-databindings</key>
+		<dict>
+			<key>begin</key>
+			<string>\b(tcl)\s+(?=\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.tcl.iappp</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.tcl.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.tcl.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#all-strings</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#embeddeds</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>text-definition</key>
+		<dict>
+			<key>begin</key>
+			<string>^\s*(text)\s+(?=\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.other.text.iappp</string>
+				</dict>
+			</dict>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.text.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.text.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#all-strings</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>top-level-objects</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>include</key>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#top-optionals</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#sections</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#text-definition</string>
+				</dict>
+			</array>
+		</dict>
+		<key>top-optionals</key>
+		<dict>
+			<key>begin</key>
+			<string>\b(optional)\s+(\(.*\))\s+(?=\{)</string>
+			<key>beginCaptures</key>
+			<dict>
+				<key>1</key>
+				<dict>
+					<key>name</key>
+					<string>keyword.control.optional.iappp</string>
+				</dict>
+				<key>2</key>
+				<dict>
+					<key>name</key>
+					<string>storage.type.optional.iappp</string>
+				</dict>
+			</dict>
+			<key>comment</key>
+			<string>Optionals cause items to not be displayed unless the defined criteria are met. This defines the optional element when it's a top level object. I.E. when it's wrapped around a section</string>
+			<key>end</key>
+			<string>}</string>
+			<key>endCaptures</key>
+			<dict>
+				<key>0</key>
+				<dict>
+					<key>name</key>
+					<string>punctuation.optional.end.iappp</string>
+				</dict>
+			</dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>end</key>
+					<string>(?=})</string>
+					<key>name</key>
+					<string>meta.optional.body.iappp</string>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#comments</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>#sections</string>
+						</dict>
+					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>validators</key>
+		<dict>
+			<key>comment</key>
+			<string>Tells the renderer what type of data is valid. If input is not valid, the user is returned to the template screen that has a red error message next to the field in question.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>keyword.validator.iappp</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>storage.type.value</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(validator)\s+("(?:FQDN|IpOrFqdn|IpAddress|NonNegativeNumber|Number|PortNumber)")</string>
+				</dict>
+			</array>
 		</dict>
 	</dict>
 	<key>scopeName</key>

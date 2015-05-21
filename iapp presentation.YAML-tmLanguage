@@ -4,6 +4,9 @@ name: F5 iApp Presentation
 scopeName: source.iapp.presentation
 fileTypes: [iappp, iapp_pres, iapp_presentation]
 uuid: b6965f69-91d4-4b71-a789-f5531cd568a4
+
+
+# General notes: The highlighting seems to be triggered by the first word in the name. keyword, entitiy, storage (for things we want to store and highlight later like variables and type definitions.)
 ## first, match the global stuff
 #firstLineMatch: '^include\\s+.?/Common/f5.apl_common.?'
 #foldingEndMarker: ^\s*\}
@@ -13,71 +16,62 @@ patterns:
     '1': {name: keyword.control.iappp}
     '2': {name: support.class.iappp}
   match: ^\s*(include)\s+("?[A-Za-z_][A-Za-z0-9_-]*)\b
-- captures:
-    '1': {name: keyword.control.iappp}
-    '2': {name: entity.name.section.iappp}
-  match: ^\s*(section)\s+("?[A-Za-z_][A-Za-z0-9_-]*)\b
-- captures:
-    '1': {name: keyword.other.iappp}
-  match: ^\s*(text)\b
-- captures:
-    '1': {name: keyword.control.iappp}
-    '2': {name: entity.name.tag.iappp}
-  match: ^\s*(choice|row|table|editchoice|multichoice|message|optional|string)\s+([A-Za-z_][A-Za-z0-9_-]*)\b
-- captures:
-    '0': {name: comment.iappp}
-  match: ^\s*#
-- {include: '#escape'}
-- {include: '#variable'}
-- begin: '"'
-  beginCaptures:
-    '0': {name: punctuation.definition.string.begin.iappp}
-  end: '"'
-  endCaptures:
-    '0': {name: punctuation.definition.string.end.iappp}
-  name: string.quoted.double.iappp
-  patterns:
-  - {include: '#escape'}
-  - {include: '#variable'}
-  - {include: '#embedded'}
+- include: '#top-level-objects'
+
+#TODO: go back and clean up elements I"m not using. I think strings and a couple others.
+#TODO: Not real sure what James' brace and inner-brace definitions do but they screw things up.
+#TODO: Move comments for certain things into the comment: element.
+#TODO: Figure out how to get it to highlight stuff that isn't properly quoted. Check out James' brace definition. I think what I want to do is define something which has a starting quote (or brace.) But ends in a new line or something.
+#TODO: Create a quoted-strings type which includes double-strings and things quoted with curly braces) Then go through and replace double-strings in things like messages or add it where appropriate
+
 repository:
-  bare-string:
-    begin: (?:^|(?<=\s))"
-    comment: matches a single quote-enclosed word without scoping
-    end: '"([^\s\]]*)'
-    endCaptures:
-      '1': {name: invalid.illegal.iappp}
+
+  # Strings and their ilk
+  #TODO: See if this should include regexes
+  all-strings:
     patterns:
-    - {include: '#escape'}
-    - {include: '#variable'}
-  braces:
-    begin: (?:^|(?<=\s))\{
-    comment: matches a single brace-enclosed word
-    end: \}([^\s\]]*)
-    endCaptures:
-      '1': {name: invalid.illegal.iappp}
-    patterns:
-    - {match: '\\[{}\n]', name: constant.character.escape.iappp}
-    - {include: '#inner-braces'}
-  embedded:
-    begin: \[
-    beginCaptures:
-      '0': {name: punctuation.section.embedded.begin.iappp}
-    end: \]
-    endCaptures:
-      '0': {name: punctuation.section.embedded.end.iappp}
-    name: source.iapp.embedded
-    patterns:
-    - {include: source.iapp}
-  escape: {match: '\\(\d{1,3}|x[a-fA-F0-9]+|u[a-fA-F0-9]{1,4}|.|\n)', name: constant.character.escape.iappp}
-  inner-braces:
+      - include: '#double-strings'
+      - include: '#braces'
+      - include: '#brace-lists'
+      - include: '#bare-strings'
+      - include: '#strings'
+      - include: '#comments'
+  brace-lists: 
     begin: \{
-    comment: matches a nested brace in a brace-enclosed word
+    beginCaptures:
+      # '0': {name: keyword.bracelist.iappp}
+      '0': {name: punctuation.definition.brace-list.begin.iappp}
+    comment: Matches a brace defined list.
     end: \}
+    endCaptures:
+      '0': {name: punctuation.definition.brace-list.end.iappp}
+      # '0': {name: keyword.bracelist.iappp}
     patterns:
-    - {match: '\\[{}\n]', name: constant.character.escape.iappp}
-    - {include: '#inner-braces'}
-  regexp:
+      - include: '#all-strings'
+  double-strings:
+    comment: Matches double quoted strings
+    begin: '"'
+    beginCaptures:
+      '0': {name: punctuation.definition.string.begin.iappp}
+    end: '"'
+    endCaptures:
+      '0': {name: punctuation.definition.string.end.iappp}
+    name: string.quoted.double.iappp
+    patterns:
+      - include: '#escapes'
+      - include: '#variables'
+      - include: '#embeddeds'
+      - include: '#all-strings'
+  comments:
+    patterns:
+    - match: \s*((#).*$\n?)
+      captures:
+        '1': {name: comment.line.double-slash.iappp}
+        '2': {name: punctuation.definition.comment.iappp}
+  # From James'
+  escapes: {match: '\\(\d{1,3}|x[a-fA-F0-9]+|u[a-fA-F0-9]{1,4}|.|\n)', name: constant.character.escape.iappp}
+
+  regexps:
     begin: (?=\S)(?![\n;\]])
     comment: matches a single word, named as a regexp, then swallows the rest of the
       command
@@ -88,28 +82,408 @@ repository:
       name: string.regexp.iappp
       patterns:
       - {include: '#braces'}
-      - {include: '#bare-string'}
-      - {include: '#escape'}
-      - {include: '#variable'}
+      - {include: '#bare-strings'}
+      - {include: '#escapes'}
+      - {include: '#variables'}
     - begin: '[ \t]'
       comment: swallow the rest of the command
       end: (?=[\n;\]])
       patterns:
-      - {include: '#variable'}
-      - {include: '#embedded'}
-      - {include: '#escape'}
+      - {include: '#variables'}
+      - {include: '#embeddeds'}
+      - {include: '#escapes'}
       - {include: '#braces'}
-      - {include: '#string'}
-  string:
-    applyEndPatternLast: 1
-    begin: (?:^|(?<=\s))(?=")
-    comment: matches a single quote-enclosed word with scoping
-    end: ''
-    name: string.quoted.double.iappp
+      - {include: '#strings'}
+  #TODO: Figure this out. It looks like it starts by being preceeded by a newline, whitespace or a single quote but then ends with two double quotes?
+  # strings:
+  #   applyEndPatternLast: 1
+  #   begin: (?:^|(?<=\s))(?=")
+  #   comment: matches a single quote-enclosed word with scoping
+  #   end: ''
+  #   # end: \" # Is this better?
+  #   name: string.quoted.double.iappp
+  #   patterns:
+  #   - {include: '#bare-string'}
+
+  
+  # Keeping these objects around because I should create something similar though I don't want to use these specifically.
+  # bare-strings:
+  #   begin: (?:^|(?<=\s))"
+  #   comment: matches a double quote-enclosed word without scoping
+  #   end: '"([^\s\]]*)'
+  #   endCaptures:
+  #     '1': {name: invalid.illegal.iappp}
+  #   patterns:
+  #   - {include: '#escapes'}
+  #   - {include: '#variables'}
+  
+  # braces:
+  #   begin: (?:^|(?<=\s))\{
+  #   comment: matches a single brace-enclosed word
+  #   # end: \}([^\s\]]*)
+  #   end: \}(^\]*)
+  #   endCaptures:
+  #     '1': {name: invalid.illegal.iappp}
+  #   patterns:
+  #   - {match: '\\[{}\n]', name: constant.character.escape.iappp}
+  #   - {include: '#inner-braces'}
+  # inner-braces:
+  #   begin: \{
+  #   comment: matches a nested brace in a brace-enclosed word
+  #   end: \}
+  #   patterns:
+  #   - {match: '\\[{}\n]', name: constant.character.escape.iappp}
+  #   - {include: '#inner-braces'}
+  embeddeds:
+    begin: \[
+    comment: Matches an embeded command
+    beginCaptures:
+      '0': {name: punctuation.definition.embedded.begin.iappp}
+    end: \]
+    endCaptures:
+      '0': {name: punctuation.definition.embedded.end.iappp}
+    name: source.iapp.embedded
     patterns:
-    - {include: '#bare-string'}
-  variable:
-    captures:
-      '1': {name: punctuation.definition.variable.iappp}
-    match: (\$)((?:[a-zA-Z0-9_]|::)+(\([^\)]+\))?|\{[^\}]*\})
-    name: variable.other.iappp
+      - include: '#embeddeds'
+      - include: '#source.iapp' # does this line do anything?
+
+    # All real APL keywords
+    #(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define)
+    # And sometimes Y... I mean... and sometimes group (only within the context of define)
+
+  # Defines the text element
+  text-definition:
+    # begin: \b(section)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
+    begin: ^\s*(text)\s+(?=\{)
+    beginCaptures:
+      '0': {name: keyword.other.text.iappp}
+    # end: '}\z' # This works but it's the wrong way to to it. This says that the text definition has to be at the very very end of the file. but it will break if you have even blank lines after it. Better way to do it is to clear up the definitions of the objects contained within text.
+    end: '}'
+    endCaptures:
+      '0': {name: punctuation.text.end.iappp}
+      # '0': {name: keyword.text.end.iappp}
+    patterns:
+      - name: meta.text.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#all-strings'
+
+  ######## Properties #########
+
+  # TODO: Figure out how to make this work with a TCL definition.
+  defaults:
+    comment: The default value presented if no value was previously entered. This can be a string or a Tcl expression.
+    patterns:
+    - match: (default)\s+("[A-Za-z_][A-Za-z0-9_-]*")
+      captures:
+        '1': {name: keyword.default.iappp}
+        '2': {name: storage.type.value}
+
+  displays:
+    comment: Gives a hint to the renderer about how this element should be displayed.
+    patterns:
+    - match: (display)\s+("(?:small|medium|large|xlarge|xxlarge)")
+      captures:
+        '1': {name: keyword.display.iappp}
+        '2': {name: storage.type.value}
+
+  validators:
+    comment: Tells the renderer what type of data is valid. If input is not valid, the user is returned to the template screen that has a red error message next to the field in question.
+    patterns:
+    - match: (validator)\s+("(?:FQDN|IpOrFqdn|IpAddress|NonNegativeNumber|Number|PortNumber)")
+      captures:
+        '1': {name: keyword.validator.iappp}
+        '2': {name: storage.type.value}
+
+  requireds:
+    comment: Makes an object required. Limited usage
+    patterns:
+    - match: (required)\s*
+      captures:
+        '1': {name: keyword.required.iappp}
+
+  #TODO: Figure out how to get it to highlight the TCL stuff in a different color.
+  # Defines the tcl data binding section which can be used to populate list type objects such as choices
+  tcl-databindings:
+    begin: \b(tcl)\s+(?=\{)
+    beginCaptures:
+      '1': {name: keyword.control.tcl.iappp}
+    end: '}'
+    endCaptures:
+      '0': {name: punctuation.tcl.end.iappp}
+    patterns:
+      - name: meta.tcl.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#all-strings'
+          - include: '#embeddeds'
+
+  strings:
+    comment: Strings are single text boxes which take user input.
+    begin: (?<=(?:^|\s|\"|\}))(string)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*
+    beginCaptures:
+      '1': {name: keyword.control.string.iappp}
+      '2': {name: storage.type.string.iappp}
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=\n)) #Ends when it is followed by another element or a newline
+    patterns:
+      - include: '#validators'
+      - include: '#requireds'
+      - include: '#displays'
+      - include: '#defaults'
+
+  passwords:
+    comment: Passwords are like strings except instead of displaying the typed text they obfuscate it. Some systems like the built in logging do their best to not log the contents either.
+    begin: (?<=(?:^|\s|\"|\}))(password)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*
+    beginCaptures:
+      '1': {name: keyword.control.string.iappp}
+      '2': {name: storage.type.string.iappp}
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=\n)) #Ends when it is followed by another element or a newline
+    patterns:
+      - include: '#requireds'
+      - include: '#displays'
+  
+  # So really choice is the word choice, some spaces, the name of the choice object, Optionally some space and a default object, optionally some space and a display object, optionally some space and a definition object {"yes","no"}, optionally a tcl databinding object.
+  choices:
+    comment: Choices produce a pull down list of selectable options.
+    # begin: (?=(?:\b|\"|\}))(choice)\s+(?=(\w+\s+)?(default|display|tcl|\{)) # This begin causes sublime text to crash if I use anything that does not include \s* as the end (because of the star I assume.)
+    begin: (?<=(?:^|\s|\"|\}))(choice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?
+    beginCaptures:
+      # '0': {name: keyword.control.choice.iappp}
+      '1': {name: keyword.control.choice.iappp}
+      '2': {name: storage.type.choice.iappp}
+    # end: '}|(?<=")\n|(?<!\{)\n'
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=}))
+    endCaptures:
+      '0': {name: storage.section.choice.end.iappp}
+    patterns:
+      - include: '#comments'
+      - include: '#displays'
+      - include: '#defaults'
+      - include: '#tcl-databindings'
+      - name: meta.choice.body.iappp # Then we might have a body definition.
+        begin: '{' # Which would start with a curly brace
+        end: (?=}) # And end with a curly brace. This actually says it ends by being followed by a curly brace. Because if there is an end curly brace we'll use it as the end of the whole choice.
+        # Choices cannot actually contian code elements. They can contain strings.
+        patterns:
+          - include: '#double-strings'
+
+  editchoices:
+    comment: Editchoices are like choices except the user can also simply type a choice instead of choosing from those available.
+    begin: (?<=(?:^|\s|\"|\}))(editchoice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?
+    beginCaptures:
+      # '0': {name: keyword.control.choice.iappp}
+      '1': {name: keyword.control.editchoice.iappp}
+      '2': {name: storage.type.editchoice.iappp}
+    # end: '}|(?<=")\n|(?<!\{)\n'
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=}))
+    endCaptures:
+      '0': {name: storage.section.editchoice.end.iappp}
+    patterns:
+      - include: '#comments'
+      - include: '#displays'
+      - include: '#defaults'
+      - include: '#tcl-databindings'
+      - name: meta.editchoice.body.iappp # Then we might have a body definition.
+        begin: '{' # Which would start with a curly brace
+        end: (?=}) # And end with a curly brace. This actually says it ends by being followed by a curly brace. Because if there is an end curly brace we'll use it as the end of the whole choice.
+        # Choices cannot actually contian code elements. They can contain strings.
+        patterns:
+          - include: '#double-strings'
+
+  multichoices:
+    comment: Multichoices present two lists of options and allow the user to move items between the lists.
+    begin: (?<=(?:^|\s|\"|\}))(multichoice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?
+    beginCaptures:
+      # '0': {name: keyword.control.choice.iappp}
+      '1': {name: keyword.control.multichoice.iappp}
+      '2': {name: storage.type.multichoice.iappp}
+    # end: '}|(?<=")\n|(?<!\{)\n'
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=}))
+    endCaptures:
+      '0': {name: storage.section.multichoice.end.iappp}
+    patterns:
+      - include: '#comments'
+      - include: '#displays'
+      - include: '#defaults'
+      - include: '#tcl-databindings'
+      - name: meta.multichoice.body.iappp # Then we might have a body definition.
+        begin: '{' # Which would start with a curly brace
+        end: (?=}) # And end with a curly brace. This actually says it ends by being followed by a curly brace. Because if there is an end curly brace we'll use it as the end of the whole choice.
+        # Choices cannot actually contian code elements. They can contain strings.
+        patterns:
+          - include: '#double-strings'
+
+  choice-types:
+    patterns:
+      - include: '#choices'
+      - include: '#editchoices'
+      - include: '#multichoices'
+
+  tables:
+    comment: Tables group other objects together in a way that allows users to add additional lines. They are like rows which can be extended.
+    begin: \b(table)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
+    beginCaptures:
+      '1': {name: keyword.control.table.iappp}
+      '2': {name: storage.type.table.iappp}
+      # '3': {name: storage.modifier.iappp}
+      # '4': {name: storage.modifier.iappp}
+    end: '}'
+    endCaptures:
+      # '0': {name: storage.section.table.end.iappp} # Should be punctuation. Using storage to cause highlighting.
+      '0': {name: punctuation.table.end.iappp}
+    patterns:
+      - name: meta.table.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#strings'
+          - include: '#passwords'
+          - include: '#choice-types'
+          # Cannot include rows or messages
+
+  #TODO: I'm not sure rows will work with choice types.
+  rows:
+    comment: Rows cause objects to be displayed side by side instead of on top of one another.
+    begin: \b(row)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
+    beginCaptures:
+      '1': {name: keyword.control.table.iappp}
+      '2': {name: storage.type.table.iappp}
+      # '3': {name: storage.modifier.iappp}
+      # '4': {name: storage.modifier.iappp}
+    end: '}'
+    endCaptures:
+      # '0': {name: storage.section.table.end.iappp} # Should be punctuation. Using storage to cause highlighting.
+      '0': {name: punctuation.table.end.iappp}
+    patterns:
+      - name: meta.table.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#strings'
+          - include: '#passwords'
+          - include: '#choice-types'
+          # Cannot include rows or messages
+
+  messages:
+    comment: Messages display un-editable text to the user.
+    begin: (?<=(?:^|\s|\"|\}))(message)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*
+    beginCaptures:
+      '1': {name: keyword.control.message.iappp}
+      '2': {name: storage.type.message.iappp}
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=\n)) #Ends when it is followed by another element or a newline
+    patterns:
+      - include: '#double-strings'
+
+  #TODO: Confirm optional is a valid type for define.
+  #TODO: add the group element.
+  defines:
+    comment: Comments allow users to create their own types.
+    begin: (?<=(?:^|\s|\"|\}))(define)\s+(?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional))
+    beginCaptures:
+      # '0': {name: keyword.control.choice.iappp}
+      '1': {name: keyword.control.define.iappp}
+      '2': {name: storage.type.define.iappp}
+    # end: '}|(?<=")\n|(?<!\{)\n'
+    end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?<=}))
+    patterns:
+      - include: '#strings'
+      - include: '#passwords'
+      - include: '#choices'
+      - include: '#editchoices'
+      - include: '#multichoices'
+      - include: '#tables'
+      - include: '#rows'
+      - include: '#messages'
+      - include: '#optionals'
+
+  top-level-objects:
+    patterns:
+      - include: '#comments'
+      - include: '#top-optionals'
+      - include: '#sections'
+      - include: '#text-definition'
+
+  optionals:
+    comment: Optionals cause items to not be displayed unless the defined criteria are met. This defines the optional element except when it's a top level object. I.E. when it's contained within a section (or something else which is contained within a section.)
+    begin: \b(optional)\s+(\(.*\))\s+(?=\{)
+    beginCaptures:
+      '1': {name: keyword.control.section.iappp}
+      '2': {name: storage.type.section.iappp}
+    end: '}'
+    endCaptures:
+      '0': {name: punctuation.section.end.iappp}
+    patterns:
+      - name: meta.section.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#strings'
+          - include: '#passwords'
+          - include: '#choices'
+          - include: '#editchoices'
+          - include: '#multichoices'
+          - include: '#tables'
+          - include: '#rows'
+          - include: '#messages'
+          - include: '#optionals'
+          - include: '#defines'
+
+  #TODO: Figure out how to get these to stop matching across everything. The first section is highlighted but subsequent sections the names are not. It seems like perhaps they look like they are inside the first section.
+  # It's not actually a problem with the section definition. It's a problem with the choices and tables definitions above. If either of those are within the section it gets lost and doesn't know where everything else ends.
+  sections:
+    begin: \b(section)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
+    beginCaptures:
+      '1': {name: keyword.control.section.iappp}
+      '2': {name: storage.type.section.iappp}
+    end: '}'
+    endCaptures:
+      '0': {name: punctuation.section.end.iappp}
+    patterns:
+      - name: meta.section.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#strings'
+          - include: '#passwords'
+          - include: '#choices'
+          - include: '#editchoices'
+          - include: '#multichoices'
+          - include: '#tables'
+          - include: '#rows'
+          - include: '#messages'
+          - include: '#optionals'
+          - include: '#defines'
+          # section
+          # This one doesn't need to be defined since they are just going to be matched in the first patterns section.
+          # include
+          # text
+
+  top-optionals:
+    comment: Optionals cause items to not be displayed unless the defined criteria are met. This defines the optional element when it's a top level object. I.E. when it's wrapped around a section
+    begin: \b(optional)\s+(\(.*\))\s+(?=\{)
+    beginCaptures:
+      '1': {name: keyword.control.optional.iappp}
+      '2': {name: storage.type.optional.iappp}
+    end: '}'
+    endCaptures:
+      '0': {name: punctuation.optional.end.iappp}
+    patterns:
+      - name: meta.optional.body.iappp
+        begin: '{'
+        end: (?=})
+        patterns:
+          - include: '#comments'
+          - include: '#sections'
+
+foldingStartMarker: \{\s*$
+foldingEndMarker: ^\s*\}
+
+#keyEquivalent: ^~J # I should come up with an equivalent.
