@@ -16,5 +16,11 @@ git clone https://github.com/bitwisecook/sublime-f5-iapp.git
 ```
 
 ## Known Issues
-Currently only support iApp implementations
+For Implementations section
 Not all keywords included
+
+For Presentation section
+Almost all keywords have been accounted for (If you find anything other than group create an issue.)
+Some crazy chioces for tokens which need to be cleaned up
+
+Macro syntax isn't really developed
