@@ -50,6 +50,8 @@
 	<dict>
 		<key>all-strings</key>
 		<dict>
+			<key>comment</key>
+			<string>All string types. Bare strings, double quoted strings, brace quoted strings, etc.</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -91,7 +93,7 @@
 				</dict>
 			</dict>
 			<key>comment</key>
-			<string>Matches a brace defined list.</string>
+			<string>Matches a brace defined list. In implementation or TCL this technically wouldn't be a string type but in APL it can only contain strings.</string>
 			<key>end</key>
 			<string>\}</string>
 			<key>endCaptures</key>
@@ -202,7 +204,7 @@
 						<key>1</key>
 						<dict>
 							<key>name</key>
-							<string>comment.line.double-slash.iappp</string>
+							<string>comment.line.pound.iappp</string>
 						</dict>
 						<key>2</key>
 						<dict>
@@ -869,6 +871,8 @@
 					<string>storage.type.section.iappp</string>
 				</dict>
 			</dict>
+			<key>comment</key>
+			<string>Sections group other elements together. They are valid only as top level items or within an optional definition if it is also at the top level. They cannot be nested inside of any other element including themselves. Almost all other elements must be nested within a section.</string>
 			<key>end</key>
 			<string>}</string>
 			<key>endCaptures</key>
@@ -1083,6 +1087,10 @@
 						<dict>
 							<key>include</key>
 							<string>#embeddeds</string>
+						</dict>
+						<dict>
+							<key>include</key>
+							<string>source.iapp_impl</string>
 						</dict>
 					</array>
 				</dict>

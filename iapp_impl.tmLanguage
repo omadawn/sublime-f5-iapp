@@ -68,7 +68,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=^|[\[{;])\s*(after|append|array|auto_execok|auto_import|auto_load|auto_mkindex|auto_mkindex_old|auto_qualify|auto_reset|bgerror|binary|cd|clock|close|concat|dde|encoding|eof|error|eval|exec|expr|fblocked|fconfigure|fcopy|file|fileevent|filename|flush|format|gets|glob|global|history|http|incr|info|interp|join|lappend|library|lindex|linsert|list|llength|load|lrange|lreplace|lsearch|lset|lsort|memory|msgcat|namespace|open|package|parray|pid|pkg::create|pkg_mkIndex|proc|puts|pwd|re_syntax|read|registry|rename|resource|scan|seek|set|socket|SafeBase|source|split|string|subst|tcl|tcl_endOfWord|tcl_findLibrary|tcl_startOfNextWord|tcl_startOfPreviousWord|tcl_wordBreakAfter|tcl_wordBreakBefore|tcltest|tclvars|tell|time|trace|unknown|unset|update|uplevel|upvar|variable|vwait)\b</string>
+			<string>(?&lt;=^|[\[{;])\s*(append|array|auto_execok|auto_import|auto_load|auto_mkindex|auto_mkindex_old|auto_qualify|auto_reset|bgerror|binary|cd|clock|close|concat|dde|encoding|eof|error|eval|exec|expr|fblocked|fconfigure|fcopy|file|fileevent|filename|flush|format|gets|glob|global|history|http|incr|info|interp|join|lappend|library|lindex|linsert|list|llength|load|lrange|lreplace|lsearch|lset|lsort|memory|msgcat|namespace|open|package|parray|pid|pkg::create|pkg_mkIndex|proc|puts|pwd|re_syntax|read|registry|rename|resource|scan|seek|set|socket|SafeBase|source|split|string|subst|tcl|tcl_endOfWord|tcl_findLibrary|tcl_startOfNextWord|tcl_startOfPreviousWord|tcl_wordBreakAfter|tcl_wordBreakBefore|tcltest|tclvars|tell|time|trace|unknown|unset|update|uplevel|upvar|variable|vwait)\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -80,7 +80,7 @@
 				</dict>
 			</dict>
 			<key>match</key>
-			<string>(?&lt;=^|[\[{;])\s*(tmsh::(create|modify|delete))\b</string>
+			<string>(?&lt;=^|[\[{;])\s*(tmsh::(create|modify|delete|log))\b</string>
 		</dict>
 		<dict>
 			<key>captures</key>
@@ -171,14 +171,6 @@
 			</array>
 		</dict>
 		<dict>
-			<key>include</key>
-			<string>#escape</string>
-		</dict>
-		<dict>
-			<key>include</key>
-			<string>#variable</string>
-		</dict>
-		<dict>
 			<key>begin</key>
 			<string>"</string>
 			<key>beginCaptures</key>
@@ -217,6 +209,26 @@
 				</dict>
 			</array>
 		</dict>
+		<dict>
+			<key>include</key>
+			<string>#escape</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#variable</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#comments</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#comments-inline</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#code</string>
+		</dict>
 	</array>
 	<key>repository</key>
 	<dict>
@@ -248,33 +260,156 @@
 				</dict>
 			</array>
 		</dict>
-		<key>braces</key>
+		<key>code</key>
 		<dict>
-			<key>begin</key>
-			<string>(?:^|(?&lt;=\s))\{</string>
-			<key>comment</key>
-			<string>matches a single brace-enclosed word</string>
-			<key>end</key>
-			<string>\}([^\s\]]*)</string>
-			<key>endCaptures</key>
-			<dict>
-				<key>1</key>
-				<dict>
-					<key>name</key>
-					<string>invalid.illegal.iapp</string>
-				</dict>
-			</dict>
 			<key>patterns</key>
 			<array>
 				<dict>
-					<key>match</key>
-					<string>\\[{}\n]</string>
-					<key>name</key>
-					<string>constant.character.escape.iapp</string>
+					<key>include</key>
+					<string>#invalids</string>
 				</dict>
 				<dict>
 					<key>include</key>
-					<string>#inner-braces</string>
+					<string>#comments</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#thiswords</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#class</string>
+				</dict>
+				<dict>
+					<key>begin</key>
+					<string>{</string>
+					<key>beginCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>invalid.illegal.iappi</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>}</string>
+					<key>endCaptures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>invalid.illegal.iappi</string>
+						</dict>
+					</dict>
+					<key>patterns</key>
+					<array>
+						<dict>
+							<key>include</key>
+							<string>#code</string>
+						</dict>
+					</array>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#assertions</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#parens</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#constants-and-special-vars</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#anonymous-classes-and-new</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#keywords</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#storage-modifiers</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#strings</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#all-types</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comments</key>
+		<dict>
+			<key>comment</key>
+			<string>Matches TCL style comments</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>comment.line.pound.iappi</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.iappi</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>\s*((#).*$\n?)</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#comments-inline</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comments-inline</key>
+		<dict>
+			<key>comment</key>
+			<string>Matches TCL style comments and TCL style 'block comment.' Quotes intentional.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>begin</key>
+					<string>if\s+0\s+\{</string>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.iappi</string>
+						</dict>
+					</dict>
+					<key>end</key>
+					<string>\}</string>
+					<key>name</key>
+					<string>comment.block.iappi</string>
+				</dict>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>comment.line.semi-pound.iappi</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.iappi</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>.+((;\s*#).*$\n?)</string>
 				</dict>
 			</array>
 		</dict>
@@ -317,25 +452,25 @@
 			<key>name</key>
 			<string>constant.character.escape.iapp</string>
 		</dict>
-		<key>inner-braces</key>
+		<key>invalids</key>
 		<dict>
-			<key>begin</key>
-			<string>\{</string>
 			<key>comment</key>
-			<string>matches a nested brace in a brace-enclosed word</string>
-			<key>end</key>
-			<string>\}</string>
+			<string>Matches TCL keywords removed from the iApps implementation of TCL.</string>
 			<key>patterns</key>
 			<array>
 				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>invalid.illegal.iapp</string>
+						</dict>
+					</dict>
 					<key>match</key>
-					<string>\\[{}\n]</string>
+					<string>(?&lt;=^|[\[{;])\s*(after|auto_execok|auto_load|auto_mkindex|auto_qualify|auto_reset|cd|close|exec|exit|fconfigure|fcopy|fileevent|filename|gets|glob|interp|load|namespace|open|pid|pkg::create|pwd|seek|socket|tcl_findLibrary|tell|update|uplevel|vwait|auto_import|auto_mkindex_old|bgerror|eof|fblocked|file|flush|http|memory|package|pkg_mkIndex|rename|source|unknown|upvar)\b</string>
 					<key>name</key>
-					<string>constant.character.escape.iapp</string>
-				</dict>
-				<dict>
-					<key>include</key>
-					<string>#inner-braces</string>
+					<string>meta.invalid.illegal.iappi</string>
 				</dict>
 			</array>
 		</dict>
@@ -426,6 +561,28 @@
 				<dict>
 					<key>include</key>
 					<string>#bare-string</string>
+				</dict>
+			</array>
+		</dict>
+		<key>thiswords</key>
+		<dict>
+			<key>comment</key>
+			<string>A bogus match to do some testing.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.iappi</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>thisword</string>
+					<key>name</key>
+					<string>keyword.other.thisword.iappi</string>
 				</dict>
 			</array>
 		</dict>

@@ -1,0 +1,8 @@
+# [PackageDev] target_format: plist, ext: tmPreferences
+name: Implementation Comments
+uuid: 679ee813-af65-4120-b414-612e85771628
+scope: source.iapp.implementation
+settings:
+  shellVariables:
+  - name: TM_COMMENT_START
+    value: '# '

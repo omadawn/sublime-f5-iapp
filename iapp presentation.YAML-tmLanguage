@@ -29,18 +29,24 @@ patterns:
 # everything else should remain unmatched
 - include: '#illegal'
 
-#TODO: go back and clean up elements I"m not using. I think strings and a couple others.
-#TODO: Not real sure what James' brace and inner-brace definitions do but they screw things up.
-#TODO: Move comments for certain things into the comment: element.
-#TODO: Figure out how to get it to highlight stuff that isn't properly quoted. Check out James' brace definition. I think what I want to do is define something which has a starting quote (or brace.) But ends in a new line or something.
-#TODO: Create a quoted-strings type which includes double-strings and things quoted with curly braces) Then go through and replace double-strings in things like messages or add it where appropriate
-
 # This is where you define scopes. I.E. where does one block of code start and end. Where within that scope are other scopes valid. For example below a choice object starts with choice <name>. After that it may 
 # contain a 'default' scope, a 'display' scope a 'tcl-databindings' scope or a choice body. The tcl-databindings scope is only valid within a choice type (choice, editchoice, multichoice.)
 repository:
+  
+  # Globally invalid/incorrect stuff.
+  # Attempting to get sublime text to highlight mismatched values and incorrect syntaxes.
+  # Neither of these do anythin and I have no idea why. It may have something to do with me not understanding them. ^_^
+  unmatched:
+    # unmatched list entries (e.g. before "{") and commas before newlines
+    match: ^ *- |,(?= *$| +#)
 
+  illegal:
+    name: invalid.illegal.unrecognized.iappp
+    match: '[^\s}]'
+  
   # Strings and their ilk
   all-strings:
+    comment: All string types. Bare strings, double quoted strings, brace quoted strings, etc.
     patterns:
       - include: '#double-strings'
       - include: '#braces'
@@ -48,16 +54,14 @@ repository:
       - include: '#bare-strings'
       - include: '#strings'
       - include: '#comments'
-  brace-lists: 
+  brace-lists:
+    comment: Matches a brace defined list. In implementation or TCL this technically wouldn't be a string type but in APL it can only contain strings.
     begin: \{
     beginCaptures:
-      # '0': {name: keyword.bracelist.iappp}
       '0': {name: punctuation.definition.brace-list.begin.iappp}
-    comment: Matches a brace defined list.
     end: \}
     endCaptures:
       '0': {name: punctuation.definition.brace-list.end.iappp}
-      # '0': {name: keyword.bracelist.iappp}
     patterns:
       - include: '#all-strings'
   double-strings:
@@ -106,46 +110,7 @@ repository:
       - {include: '#escapes'}
       - {include: '#braces'}
       - {include: '#strings'}
-  #TODO: Figure this out. It looks like it starts by being preceeded by a newline, whitespace or a single quote but then ends with two double quotes?
-  # strings:
-  #   applyEndPatternLast: 1
-  #   begin: (?:^|(?<=\s))(?=")
-  #   comment: matches a single quote-enclosed word with scoping
-  #   end: ''
-  #   # end: \" # Is this better?
-  #   name: string.quoted.double.iappp
-  #   patterns:
-  #   - {include: '#bare-string'}
-
-  
-  # Keeping these objects around because I should create something similar though I don't want to use these specifically.
-  # bare-strings:
-  #   begin: (?:^|(?<=\s))"
-  #   comment: matches a double quote-enclosed word without scoping
-  #   end: '"([^\s\]]*)'
-  #   endCaptures:
-  #     '1': {name: invalid.illegal.iappp}
-  #   patterns:
-  #   - {include: '#escapes'}
-  #   - {include: '#variables'}
-  
-  # braces:
-  #   begin: (?:^|(?<=\s))\{
-  #   comment: matches a single brace-enclosed word
-  #   # end: \}([^\s\]]*)
-  #   end: \}(^\]*)
-  #   endCaptures:
-  #     '1': {name: invalid.illegal.iappp}
-  #   patterns:
-  #   - {match: '\\[{}\n]', name: constant.character.escape.iappp}
-  #   - {include: '#inner-braces'}
-  # inner-braces:
-  #   begin: \{
-  #   comment: matches a nested brace in a brace-enclosed word
-  #   end: \}
-  #   patterns:
-  #   - {match: '\\[{}\n]', name: constant.character.escape.iappp}
-  #   - {include: '#inner-braces'}
+ 
   embeddeds:
     begin: \[
     comment: Matches an embeded command
@@ -159,11 +124,6 @@ repository:
       - include: '#embeddeds'
       - include: '#source.iapp' # does this line do anything?
 
-    # All real APL keywords
-    #(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define)
-    # And sometimes Y... I mean... and sometimes group (only within the context of define)
-
-
   # This does not work
   text-definition-variable:
     patterns:
@@ -173,13 +133,12 @@ repository:
           # '0': {name: variable.language.iappp}
           '0': {name: keyord.control.iappp}
 
-  # Defines the text element
+  # Defines the text definition element which is typically found at the bottom of an APL definition.
   text-definition:
-    # begin: \b(section)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
     begin: ^\s*(text)\s+(?=\{)
     beginCaptures:
+      # '0': {name: punctuation.text.start.iappp} # perhaps?
       '0': {name: keyword.other.text.iappp}
-    # end: '}\z' # This works but it's the wrong way to to it. This says that the text definition has to be at the very very end of the file. but it will break if you have even blank lines after it. Better way to do it is to clear up the definitions of the objects contained within text.
     end: '}'
     endCaptures:
       '0': {name: punctuation.text.end.iappp}
@@ -196,7 +155,6 @@ repository:
 
   ######## Properties #########
 
-  # TODO: Figure out how to make this work with a TCL definition.
   defaults:
     comment: The default value presented if no value was previously entered. This can be a string or a Tcl expression.
     patterns:
@@ -228,7 +186,6 @@ repository:
       captures:
         '1': {name: keyword.required.iappp}
 
-  #TODO: Figure out how to get it to highlight the TCL stuff in a different color.
   # Defines the tcl data binding section which can be used to populate list type objects such as choices
   tcl-databindings:
     begin: \b(tcl)\s+(?=\{)
@@ -245,6 +202,7 @@ repository:
           - include: '#comments'
           - include: '#all-strings'
           - include: '#embeddeds'
+          - include: 'source.iapp_impl' # You can include a separate language by specifying it's scope name. Note the missing initial pound.
 
   strings:
     comment: Strings are single text boxes which take user input.
@@ -273,7 +231,6 @@ repository:
   # So really choice is the word choice, some spaces, the name of the choice object, Optionally some space and a default object, optionally some space and a display object, optionally some space and a definition object {"yes","no"}, optionally a tcl databinding object.
   choices:
     comment: Choices produce a pull down list of selectable options.
-    # begin: (?=(?:\b|\"|\}))(choice)\s+(?=(\w+\s+)?(default|display|tcl|\{)) # This begin causes sublime text to crash if I use anything that does not include \s* as the end (because of the star I assume.)
     begin: (?<=(?:^|\s|\"|\}))(choice)\s+([A-Za-z_][A-Za-z0-9_-]*)((?=\s*(display|default|tcl)))?
     beginCaptures:
       # '0': {name: keyword.control.choice.iappp}
@@ -370,7 +327,7 @@ repository:
           - include: '#choice-types'
           # Cannot include rows or messages
 
-  #TODO: I'm not sure rows will work with choice types.
+  # I'm not sure if rows will work with choice types or not.
   rows:
     comment: Rows cause objects to be displayed side by side instead of on top of one another.
     begin: \b(row)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
@@ -404,8 +361,6 @@ repository:
     patterns:
       - include: '#double-strings'
 
-  #TODO: Confirm optional is a valid type for define.
-  #TODO: add the group element.
   defines:
     comment: Comments allow users to create their own types.
     begin: (?<=(?:^|\s|\"|\}))(define)\s+(?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional))
@@ -459,9 +414,8 @@ repository:
           - include: '#optionals'
           - include: '#defines'
 
-  #TODO: Figure out how to get these to stop matching across everything. The first section is highlighted but subsequent sections the names are not. It seems like perhaps they look like they are inside the first section.
-  # It's not actually a problem with the section definition. It's a problem with the choices and tables definitions above. If either of those are within the section it gets lost and doesn't know where everything else ends.
   sections:
+    comment: Sections group other elements together. They are valid only as top level items or within an optional definition if it is also at the top level. They cannot be nested inside of any other element including themselves. Almost all other elements must be nested within a section.
     begin: \b(section)\s+([A-Za-z_][A-Za-z0-9_-]*)\s+(?=\{)
     beginCaptures:
       '1': {name: keyword.control.section.iappp}
@@ -506,12 +460,3 @@ repository:
         patterns:
           - include: '#comments'
           - include: '#sections'
-
-  # Neither of these work and I have no idea why
-  unmatched:
-    # unmatched list entries (e.g. before "{") and commas before newlines
-    match: ^ *- |,(?= *$| +#)
-
-  illegal:
-    name: invalid.illegal.unrecognized.iappp
-    match: '[^\s}]'
