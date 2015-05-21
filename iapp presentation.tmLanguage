@@ -37,6 +37,14 @@
 			<key>include</key>
 			<string>#top-level-objects</string>
 		</dict>
+		<dict>
+			<key>include</key>
+			<string>#unmatched</string>
+		</dict>
+		<dict>
+			<key>include</key>
+			<string>#illegal</string>
+		</dict>
 	</array>
 	<key>repository</key>
 	<dict>
@@ -472,6 +480,13 @@
 			<string>\\(\d{1,3}|x[a-fA-F0-9]+|u[a-fA-F0-9]{1,4}|.|\n)</string>
 			<key>name</key>
 			<string>constant.character.escape.iappp</string>
+		</dict>
+		<key>illegal</key>
+		<dict>
+			<key>match</key>
+			<string>[^\s}]</string>
+			<key>name</key>
+			<string>invalid.illegal.unrecognized.iappp</string>
 		</dict>
 		<key>messages</key>
 		<dict>
@@ -1108,6 +1123,10 @@
 					<array>
 						<dict>
 							<key>include</key>
+							<string>#text-definition-variable</string>
+						</dict>
+						<dict>
+							<key>include</key>
 							<string>#comments</string>
 						</dict>
 						<dict>
@@ -1115,6 +1134,26 @@
 							<string>#all-strings</string>
 						</dict>
 					</array>
+				</dict>
+			</array>
+		</dict>
+		<key>text-definition-variable</key>
+		<dict>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>0</key>
+						<dict>
+							<key>name</key>
+							<string>keyord.control.iappp</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>(^\s*([A-Za-z_][A-Za-z0-9_-]*))(?=\s)</string>
+					<key>name</key>
+					<string>variable.language.iappp</string>
 				</dict>
 			</array>
 		</dict>
@@ -1191,6 +1230,11 @@
 					</array>
 				</dict>
 			</array>
+		</dict>
+		<key>unmatched</key>
+		<dict>
+			<key>match</key>
+			<string>^ *- |,(?= *$| +#)</string>
 		</dict>
 		<key>validators</key>
 		<dict>
