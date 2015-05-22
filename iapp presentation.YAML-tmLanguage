@@ -414,11 +414,13 @@ repository:
 
   optionals:
     comment: Optionals cause items to not be displayed unless the defined criteria are met. This defines the optional element except when it's a top level object. I.E. when it's contained within a section (or something else which is contained within a section.)
-    begin: \b(optional)\s+(\(.*\))\s+(?=\{)
+    # begin: \b(optional)\s+(\(.*\))\s+(?=\{)
+    begin: \b(optional)\s+\( # Optionals don't have a name and their condition can be spread across multiple lines.
     beginCaptures:
       '1': {name: keyword.control.section.iappp}
-      '2': {name: storage.type.section.iappp}
-    end: '}'
+      # '2': {name: storage.type.section.iappp}
+    # end: '}'
+    end: ((?=(section|optional|text|proc))|(?<=})) # is Proc appropriate here?
     endCaptures:
       '0': {name: punctuation.section.end.iappp}
     patterns:
@@ -444,7 +446,8 @@ repository:
     beginCaptures:
       '1': {name: keyword.control.section.iappp}
       '2': {name: storage.type.section.iappp}
-    end: '}'
+    # end: '}'
+    end: ((?=(section|optional|text|proc))|(?<=})) # is Proc appropriate here?
     endCaptures:
       '0': {name: punctuation.section.end.iappp}
     patterns:

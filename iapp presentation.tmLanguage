@@ -619,7 +619,7 @@
 		<key>optionals</key>
 		<dict>
 			<key>begin</key>
-			<string>\b(optional)\s+(\(.*\))\s+(?=\{)</string>
+			<string>\b(optional)\s+\(</string>
 			<key>beginCaptures</key>
 			<dict>
 				<key>1</key>
@@ -627,16 +627,11 @@
 					<key>name</key>
 					<string>keyword.control.section.iappp</string>
 				</dict>
-				<key>2</key>
-				<dict>
-					<key>name</key>
-					<string>storage.type.section.iappp</string>
-				</dict>
 			</dict>
 			<key>comment</key>
 			<string>Optionals cause items to not be displayed unless the defined criteria are met. This defines the optional element except when it's a top level object. I.E. when it's contained within a section (or something else which is contained within a section.)</string>
 			<key>end</key>
-			<string>}</string>
+			<string>((?=(section|optional|text|proc))|(?&lt;=}))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>0</key>
@@ -907,7 +902,7 @@
 			<key>comment</key>
 			<string>Sections group other elements together. They are valid only as top level items or within an optional definition if it is also at the top level. They cannot be nested inside of any other element including themselves. Almost all other elements must be nested within a section.</string>
 			<key>end</key>
-			<string>}</string>
+			<string>((?=(section|optional|text|proc))|(?&lt;=}))</string>
 			<key>endCaptures</key>
 			<dict>
 				<key>0</key>
