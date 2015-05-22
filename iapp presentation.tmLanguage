@@ -196,6 +196,8 @@
 		</dict>
 		<key>comments</key>
 		<dict>
+			<key>comment</key>
+			<string>Matches TCL style comments and empty TCL style 'block comment.' Quotes intentional.</string>
 			<key>patterns</key>
 			<array>
 				<dict>
@@ -204,16 +206,47 @@
 						<key>1</key>
 						<dict>
 							<key>name</key>
-							<string>comment.line.pound.iappp</string>
+							<string>comment.line.pound.iappi</string>
 						</dict>
 						<key>2</key>
 						<dict>
 							<key>name</key>
-							<string>punctuation.definition.comment.iappp</string>
+							<string>punctuation.definition.comment.iappi</string>
 						</dict>
 					</dict>
 					<key>match</key>
 					<string>\s*((#).*$\n?)</string>
+					<key>name</key>
+					<string>meta.comment.standalone</string>
+				</dict>
+				<dict>
+					<key>include</key>
+					<string>#comments-inline</string>
+				</dict>
+			</array>
+		</dict>
+		<key>comments-inline</key>
+		<dict>
+			<key>comment</key>
+			<string>Matches TCL style comments and TCL style 'block comment.' Quotes intentional.</string>
+			<key>patterns</key>
+			<array>
+				<dict>
+					<key>captures</key>
+					<dict>
+						<key>1</key>
+						<dict>
+							<key>name</key>
+							<string>comment.line.semi-pound.iappi</string>
+						</dict>
+						<key>2</key>
+						<dict>
+							<key>name</key>
+							<string>punctuation.definition.comment.iappi</string>
+						</dict>
+					</dict>
+					<key>match</key>
+					<string>.+((;\s*#).*$\n?)</string>
 				</dict>
 			</array>
 		</dict>

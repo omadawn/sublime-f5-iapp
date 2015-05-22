@@ -78,12 +78,36 @@ repository:
       - include: '#variables'
       - include: '#embeddeds'
       - include: '#all-strings'
+
   comments:
+    comment: Matches TCL style comments and empty TCL style 'block comment.' Quotes intentional.
     patterns:
-    - match: \s*((#).*$\n?)
+    - name: meta.comment.standalone
+      match: \s*((#).*$\n?)
       captures:
-        '1': {name: comment.line.pound.iappp}
-        '2': {name: punctuation.definition.comment.iappp}
+        '1': {name: comment.line.pound.iappi}
+        '2': {name: punctuation.definition.comment.iappi}
+        # Commenting out because I'm pretty sure APL doesn't allow if so the if 0 syntax won't help.
+    # - name: comment.block.empty.iappi
+    #   comment: Completely empty block comments won't match the in-line syntax below due to the begin/end syntax. (I think they won't)
+    #   match: \s*(if\s+0\s+\{\})
+    #   captures:
+    #     '1': {name: punctuation.definition.comment.iappi}
+    - include: '#comments-inline'
+
+  comments-inline:
+    comment: Matches TCL style comments and TCL style 'block comment.' Quotes intentional.
+    patterns:
+      # Commenting out because I'm pretty sure APL doesn't allow if so the if 0 syntax won't help.
+    # - name: comment.block.iappi
+    #   begin: \s*if\s+0\s+\{
+    #   end: \}
+    #   captures:
+    #     '0': {name: punctuation.definition.comment.iappi}
+    - match: .+((;\s*#).*$\n?) #This might not be valid with the semi-colon.
+      captures:
+        '1': {name: comment.line.semi-pound.iappi}
+        '2': {name: punctuation.definition.comment.iappi}
   
   escapes: {match: '\\(\d{1,3}|x[a-fA-F0-9]+|u[a-fA-F0-9]{1,4}|.|\n)', name: constant.character.escape.iappp}
 

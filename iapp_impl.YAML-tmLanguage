@@ -13,66 +13,68 @@ foldingStartMarker: \{\s*$
 
 # Stuff matched here does not seem to match when inside some scope defined in the repository section. see commands such as tmsh::create.
 patterns:
-- captures:
-    '1': {name: keyword.control.iapp}
-  match: (?<=^|[\[{;])\s*(if|while|for|catch|return|break|continue|switch|exit|foreach)\b
-- captures:
-    '1': {name: keyword.control.iapp}
-  match: (?<=^|})\s*(then|elseif|else)\b
-- captures:
-    '1': {name: keyword.other.iapp}
-    '2': {name: entity.name.function.iapp}
-  match: ^\s*(proc)\s+([^\s]+)
-- captures:
-    '1': {name: keyword.other.iapp} # removed after from the below for now.
-  match: (?<=^|[\[{;])\s*(append|array|auto_execok|auto_import|auto_load|auto_mkindex|auto_mkindex_old|auto_qualify|auto_reset|bgerror|binary|cd|clock|close|concat|dde|encoding|eof|error|eval|exec|expr|fblocked|fconfigure|fcopy|file|fileevent|filename|flush|format|gets|glob|global|history|http|incr|info|interp|join|lappend|library|lindex|linsert|list|llength|load|lrange|lreplace|lsearch|lset|lsort|memory|msgcat|namespace|open|package|parray|pid|pkg::create|pkg_mkIndex|proc|puts|pwd|re_syntax|read|registry|rename|resource|scan|seek|set|socket|SafeBase|source|split|string|subst|tcl|tcl_endOfWord|tcl_findLibrary|tcl_startOfNextWord|tcl_startOfPreviousWord|tcl_wordBreakAfter|tcl_wordBreakBefore|tcltest|tclvars|tell|time|trace|unknown|unset|update|uplevel|upvar|variable|vwait)\b
+# - captures:
+#     '1': {name: keyword.control.iapp}
+#   match: (?<=^|[\[{;])\s*(if|while|for|catch|return|break|continue|switch|exit|foreach)\b
+# - captures:
+#     '1': {name: keyword.control.iapp}
+#   match: (?<=^|})\s*(then|elseif|else)\b
+# - captures:
+#     '1': {name: keyword.other.iapp}
+#     '2': {name: entity.name.function.iapp}
+#   match: ^\s*(proc)\s+([^\s]+)
+# - captures:
+#     '1': {name: keyword.other.iapp} # removed after from the below for now.
+#   match: (?<=^|[\[{;])\s*(append|array|auto_execok|auto_import|auto_load|auto_mkindex|auto_mkindex_old|auto_qualify|auto_reset|bgerror|binary|cd|clock|close|concat|dde|encoding|eof|error|eval|exec|expr|fblocked|fconfigure|fcopy|file|fileevent|filename|flush|format|gets|glob|global|history|http|incr|info|interp|join|lappend|library|lindex|linsert|list|llength|load|lrange|lreplace|lsearch|lset|lsort|memory|msgcat|namespace|open|package|parray|pid|pkg::create|pkg_mkIndex|proc|puts|pwd|re_syntax|read|registry|rename|resource|scan|seek|set|socket|SafeBase|source|split|string|subst|tcl|tcl_endOfWord|tcl_findLibrary|tcl_startOfNextWord|tcl_startOfPreviousWord|tcl_wordBreakAfter|tcl_wordBreakBefore|tcltest|tclvars|tell|time|trace|unknown|unset|update|uplevel|upvar|variable|vwait)\b
 # Keywords which the developers guid says have been removed from TCL when it comes to iApps. Some of these are wrong. proc for example is listed but most of the built in templates use it now. This will need to be reviewed. Additionally anything which is actually determined to be invalid in iApps context(s) should be removed from the above.
 # - captures:
 #     '1': {name: invalid.illegal.iapp}
 #   match: (?<=^|[\[{;])\s*(after|auto_execok|auto_load|auto_mkindex|auto_qualify|auto_reset|cd|close|exec|exit|fconfigure|fcopy|fileevent|filename|gets|glob|interp|load|namespace|open|pid|pkg::create|pwd|seek|socket|tcl_findLibrary|tell|update|uplevel|vwait|auto_import|auto_mkindex_old|bgerror|eof|fblocked|file|flush|http|memory|package|pkg_mkIndex|rename|source|unknown|upvar)\b
-- captures:
-    '1': {name: keyword.other.iapp}
-  match: (?<=^|[\[{;])\s*(tmsh::(create|modify|delete|log))\b
-- captures:
-    '1': {name: keyword.other.iapp}
-  match: (?<=^|[\[{;])\s*(iapp::(is|conf|debug|tmsh_create|substa|template))\b
-- captures:
-    '1': {name: variable.language.iapp}
-  match: (\$tmsh::app_name)
-- captures:
-    '1': {name: variable.parameter.iapp}
-  match: ((\$|\[set\\s+)?::([A-Za-z_][A-Za-z0-9_-]*[^_]|[A-Za-z][A-Za-z0-9]*)__[A-Za-z][A-Za-z0-9_-]*)
-- begin: (?<=^|[\[{;])\s*(regexp|regsub)\b\s*
-  beginCaptures:
-    '1': {name: keyword.other.iapp}
-  comment: special-case regexp/regsub keyword in order to handle the expression
-  end: '[\n;\]]'
-  patterns:
-  - {match: '\\(?:.|\n)', name: constant.character.escape.iapp}
-  - {comment: switch for regexp, match: -\w+\s*}
-  - applyEndPatternLast: 1
-    begin: --\s*
-    comment: end of switches
-    end: ''
-    patterns:
-    - {include: '#regexp'}
-  - {include: '#regexp'}
-- begin: '"'
-  beginCaptures:
-    '0': {name: punctuation.definition.string.begin.iapp}
-  end: '"'
-  endCaptures:
-    '0': {name: punctuation.definition.string.end.iapp}
-  name: string.quoted.double.iapp
-  patterns:
-  - {include: '#escape'}
-  - {include: '#variable'}
-  - {include: '#embedded'}
+# - captures:
+#     '1': {name: keyword.other.iapp}
+#   match: (?<=^|[\[{;])\s*(tmsh::(create|modify|delete|log))\b
+# - captures:
+#     '1': {name: keyword.other.iapp}
+#   match: (?<=^|[\[{;])\s*(iapp::(is|conf|debug|tmsh_create|substa|template))\b
+# - captures:
+#     '1': {name: variable.language.iapp}
+#   match: (\$tmsh::app_name)
+# - captures:
+#     '1': {name: variable.parameter.iapp}
+#   match: ((\$|\[set\\s+)?::([A-Za-z_][A-Za-z0-9_-]*[^_]|[A-Za-z][A-Za-z0-9]*)__[A-Za-z][A-Za-z0-9_-]*)
+# - begin: (?<=^|[\[{;])\s*(regexp|regsub)\b\s*
+#   beginCaptures:
+#     '1': {name: keyword.other.iapp}
+#   comment: special-case regexp/regsub keyword in order to handle the expression
+#   end: '[\n;\]]'
+#   patterns:
+#   - {match: '\\(?:.|\n)', name: constant.character.escape.iapp}
+#   - {comment: switch for regexp, match: -\w+\s*}
+#   - applyEndPatternLast: 1
+#     begin: --\s*
+#     comment: end of switches
+#     end: ''
+#     patterns:
+#     - {include: '#regexp'}
+#   - {include: '#regexp'}
+# - begin: '"'
+#   beginCaptures:
+#     '0': {name: punctuation.definition.string.begin.iapp}
+#   end: '"'
+#   endCaptures:
+#     '0': {name: punctuation.definition.string.end.iapp}
+#   name: string.quoted.double.iapp
+#   patterns:
+#   - {include: '#escape'}
+#   - {include: '#variable'}
+#   - {include: '#embedded'}
+- include: '#iapp-names'
 - include: '#escape'
-- include: '#variable'
+# - include: '#variables'
 - include: '#comments'
 - include: '#comments-inline'
 - include: '#code'
+# - include: '#tmshvars'
 
 #NOTE: Use contentName to match the contents between a begin and end 
 
@@ -139,90 +141,202 @@ repository:
       - {include: '#string'}
 
   string:
-    applyEndPatternLast: 1
+    # applyEndPatternLast: 1
     begin: (?:^|(?<=\s))(?=")
     comment: matches a single quote-enclosed word with scoping
     end: ''
     name: string.quoted.double.iapp
     patterns:
     - {include: '#bare-string'}
-  variable:
-    captures:
-      '1': {name: punctuation.definition.variable.iapp}
-    match: (\$)((?:[a-zA-Z0-9_]|::)+(\([^\)]+\))?|\{[^\}]*\})
-    name: variable.other.iapp
+
+  # 'Borrowed' from the Java definition. Expand/modify for TCL/TMSH Script
+  code:
+    patterns:
+    # Includes here means they are valid with the 'code' scope until something (like a code body) occurs.
+    - include: '#invalids'
+    - include: '#tmsh-commands'
+    - include: '#iapp-utility-commands'
+    - include: '#comments'
+    - include: '#keywords'
+    - include: '#controls'
+    - include: '#further-controls'
+    - include: '#procs'
+    - include: '#iapp-names'
+    - include: '#double-strings' # This really belongs within specific commands.
+    - include: '#sregexes'
+    - include: '#variables'
+    - include: '#tmshvars'
+    - begin: '{' #TODO: Make sure this is true.
+      # beginCaptures:
+      #   '0': {name: invalid.illegal.iappi}
+      end: '}'
+      # endCaptures:
+      #   '0': {name: invalid.illegal.iappi}
+      patterns:
+      # This is essentially the code body. Includes in here are valid within the body definition. In this case the matched curly braces.
+      - include: '#code'
+    # I'm not sure about things after the body but which are at the same level as the before body stuff above.      
+    - include: '#assertions' #Review
+    - include: '#parens' #Review
+    - include: '#constants-and-special-vars' #Review
+    - include: '#anonymous-classes-and-new' #Review
+    - include: '#storage-modifiers' #Review
+    - include: '#strings' #Review
+    - include: '#all-types' #Review
+
+  iapp-names:
+    comment: Matches the special syntax of application name. I'm following the s convention because it can occur multiple times.
+    patterns:
+    - name: meta.name.variable.language.iapp
+      match: (\$tmsh::app_name)
+      captures:
+        # '1': {name: variable.language.iapp}
+        '1': {name: variable.parameter.iapp} # Right now this is the only syntax which causes this to be highlighted. Perhaps the others are wrong or perhaps I need a different color definition.
+        # '1': {name: punctuation.definition.variable.iapp}
 
   invalids:
     comment: Matches TCL keywords removed from the iApps implementation of TCL.
     patterns:
     - name: meta.invalid.illegal.iappi
-      match: (?<=^|[\[{;])\s*(after|auto_execok|auto_load|auto_mkindex|auto_qualify|auto_reset|cd|close|exec|exit|fconfigure|fcopy|fileevent|filename|gets|glob|interp|load|namespace|open|pid|pkg::create|pwd|seek|socket|tcl_findLibrary|tell|update|uplevel|vwait|auto_import|auto_mkindex_old|bgerror|eof|fblocked|file|flush|http|memory|package|pkg_mkIndex|rename|source|unknown|upvar)\b
+      match: (?<=^|[\[{;])\s*(after|auto_execok|auto_load|auto_mkindex|auto_qualify|auto_reset|cd|close|exec|exit|fconfigure|fcopy|fileevent|filename|gets|glob|interp|load|namespace|open|pid|pkg::create|pwd|seek|socket|tcl_findLibrary|tell|update|uplevel|vwait|auto_import|auto_mkindex_old|bgerror|eof|fblocked|file|flush|http|memory|pkg_mkIndex|rename|source|unknown|upvar)\b
       captures:
         '1': {name: invalid.illegal.iapp}
+  # Keywords removed from the invalids section:
+  #   proc
+  #   package
 
-  # 'Borrowed' from the Java definition. Expand/modify for TCL/TMSH Script
-  code:
+  controls:
+    comment: Control structures like if and foreach
     patterns:
-    - include: '#invalids'
-    - include: '#comments'
-    - include: '#thiswords'
-    - include: '#class'
-    - begin: '{' #TODO: Make sure this is true.
-      beginCaptures:
-        '0': {name: invalid.illegal.iappi}
-      end: '}'
-      endCaptures:
-        '0': {name: invalid.illegal.iappi}
-      patterns:
-      - include: '#code'
-    - include: '#assertions'
-    - include: '#parens'
-    - include: '#constants-and-special-vars'
-    - include: '#anonymous-classes-and-new'
-    - include: '#keywords'
-    - include: '#storage-modifiers'
-    - include: '#strings'
-    - include: '#all-types'
-
-  thiswords:
-    comment: A bogus match to do some testing.
-    patterns:
-    - name: keyword.other.thisword.iappi
-      match: thisword
+    - name: meta.name.keyword.control.iapp
+      match: (?<=^|[\[{;])\s*(if|while|for|catch|return|break|continue|switch|exit|foreach)\b
       captures:
-        '0': {name: punctuation.definition.comment.iappi}
+        '1': {name: keyword.control.iapp}
+  
+  further-controls:
+    comment: Control structures like else which are only valid if preceeded by a controls
+    patterns:
+    - name: meta.name.keyword.control.iapp
+      match: (?<=^|})\s*(then|elseif|else)\b
+      captures:
+        '1': {name: keyword.control.iapp}
 
-  # Original comments syntax from iappp definition.
+  procs:
+    comment: Proc creates a new TCL command (which you could call a function.) The developers guide says this command is invalid but it is used in most modern F5 templates.
+    patterns:
+    - name: meta.name.keyword.other.proc.iapp
+      match: ^\s*(proc)\s+([^\s]+)
+      captures:
+        '1': {name: keyword.other.iapp}
+        '2': {name: entity.name.function.iapp}
+
+  keywords:
+    comment: Other TMSH Scripting keywords which have not been defined other places.
+    patterns:
+    - name: meta.name.keyword.other.iapp
+      match: (?<=^|[\[{;])\s*(append|array|auto_execok|auto_import|auto_load|auto_mkindex|auto_mkindex_old|auto_qualify|auto_reset|bgerror|binary|cd|clock|close|concat|dde|encoding|eof|error|eval|exec|expr|fblocked|fconfigure|fcopy|file|fileevent|filename|flush|format|gets|glob|global|history|http|incr|info|interp|join|lappend|library|lindex|linsert|list|llength|load|lrange|lreplace|lsearch|lset|lsort|memory|msgcat|namespace|open|package|parray|pid|pkg::create|pkg_mkIndex|puts|pwd|re_syntax|read|registry|rename|resource|scan|seek|set|socket|SafeBase|source|split|string|subst|tcl|tcl_endOfWord|tcl_findLibrary|tcl_startOfNextWord|tcl_startOfPreviousWord|tcl_wordBreakAfter|tcl_wordBreakBefore|tcltest|tclvars|tell|time|trace|unknown|unset|update|uplevel|upvar|variable|vwait)\b
+      captures:
+        '1': {name: keyword.other.iapp} # removed after from the below for now.
+
+  tmsh-commands:
+    comment: Matches tmsh scripting commands such as tmsh::create and tmsh::log
+    patterns:
+    - name: meta.name.keyword.other.iapp
+      match: (?<=^|[\[{;])\s*(tmsh::(create|modify|delete|log))\b
+      captures:
+        '1': {name: keyword.other.iapp}
+
+  iapp-utility-commands:
+    comment: Commands from the iApp Utility package
+    patterns:
+    - name: meta.name.keyword.other.iapp
+      match: (?<=^|[\[{;])\s*(iapp::(is|conf|debug|tmsh_create|substa|template|destination|make_safe_password|tmos_version|get_items|pool_members|apm_config|upgrade_template|downgrade_template))\b
+      captures:
+        '1': {name: keyword.other.iapp}
+
+  double-strings:
+    comment: Blocks of text surrounded by double quotes
+    patterns:
+    - begin: '"'
+      beginCaptures:
+        '0': {name: punctuation.definition.string.begin.iapp}
+      end: '"'
+      endCaptures:
+        '0': {name: punctuation.definition.string.end.iapp}
+      name: string.quoted.double.iapp
+      patterns:
+      - include: '#escape'
+      # - include: '#variable'
+      - include: '#embedded'
+      - include: '#tmshvars'
+
+  variables:
+    comment: Matches regular variables with no global inducing double colon. Plus I modified the match regex because I _think_ it's wrong. I'm sure this is not the right way to do this but it's working for now.
+    patterns:
+    - name: meta.variable.other.iapp
+      # match: (\$)((?:[a-zA-Z0-9_]|::)+(\([^\)]+\))?|\{[^\}]*\})
+      match: (\$)((?:[a-zA-Z0-9_][A-Za-z0-9_-]*)(\([^\)]+\))?|\{[^\}]*\})
+      captures:
+        # '1': {name: punctuation.definition.variable.iapp}
+        # '1': {name: variable.other.iapp}
+        '0': {name: variable.parameter.iapp}
+
+  tmshvars:
+    comment: tmsh style variables including variables from the presentation section and variables being set. (IE $::myvarname $::mysection__myfield.)
+    patterns:
+    - name: meta.name.variable.language.iapp
+      # match: ((\$|\[set\s+)?::(([A-Za-z_][A-Za-z0-9_-]*[^_])|([A-Za-z][A-Za-z0-9]*__[A-Za-z][A-Za-z0-9_-]*))) # This says a variable can be a bunch of letters numbers underbars and dashes (But not start with a dash) and then one of any character at all except underbar. Which is causing it to match the closing quote when it is embedded in quotes.
+      # match: ((\$|\[set\s+)?::(([A-Za-z_][A-Za-z0-9_-]*[^_"'}{}])|([A-Za-z][A-Za-z0-9]*__[A-Za-z][A-Za-z0-9_-]*)))
+      match: ((\$|\[set\s+)?::([A-Za-z_][A-Za-z0-9_-]*)) # I think the intent was to say that the variable cannot end in an underbar? It's not invalid. Perhaps that is a convention for a specific type of variable (like a pointer or something in C) and someone wanted to have two different types.
+      captures:
+        '1': {name: variable.parameter.iapp}
+        # '3': {name: variable.parameter.iapp}
+
+  sregexes:
+    comment: Some 'special-case' regex thing. I don't quite understand what it does yet. -Aaron
+    patterns:
+    - begin: (?<=^|[\[{;])\s*(regexp|regsub)\b\s*
+      beginCaptures:
+        '1': {name: keyword.other.iapp}
+      comment: special-case regexp/regsub keyword in order to handle the expression
+      end: '[\n;\]]'
+      patterns:
+      - name: constant.character.escape.iapp
+      # - name: meta.name.sregex.content.iapp
+        match: '\\(?:.|\n)'
+        comment: switch for regexp, match (semicolon) -\w+\s*}
+        # applyEndPatternLast: 1
+        begin: --\s*
+        comment: end of switches
+        end: ''
+        patterns:
+        - include: '#regexp'
+      - include: '#regexp'
+
   comments:
     comment: Matches TCL style comments
     patterns:
-    - match: \s*((#).*$\n?)
+    - name: meta.comment.standalone
+      match: \s*((#).*$\n?)
       captures:
         '1': {name: comment.line.pound.iappi}
         '2': {name: punctuation.definition.comment.iappi}
+    - name: comment.block.empty.iappi
+      comment: Completely empty block comments won't match the in-line syntax below due to the begin/end syntax. (I think they won't)
+      match: \s*(if\s+0\s+\{\})
+      captures:
+        '1': {name: punctuation.definition.comment.iappi}
     - include: '#comments-inline'
-
-  # Java has something like this. Not so sure why I need this.        
-  # comments:
-  #   comment: Matches an empty TCL style 'block comment.' Quotes intentional.
-  #   patterns:
-  #   - name: comment.block.empty.iappi
-  #     match: if\s+0\s+\{\}
-  #     captures:
-  #       '0': {name: punctuation.definition.comment.iappi}
-  #   - include: '#comments-inline'
 
   comments-inline:
     comment: Matches TCL style comments and TCL style 'block comment.' Quotes intentional.
     patterns:
     - name: comment.block.iappi
-      begin: if\s+0\s+\{
+      begin: \s*if\s+0\s+\{
       end: \}
       captures:
         '0': {name: punctuation.definition.comment.iappi}
-    - match: .+((;\s*#).*$\n?)
+    - match: .+((;\s*#).*$\n?) 
       captures:
         '1': {name: comment.line.semi-pound.iappi}
         '2': {name: punctuation.definition.comment.iappi}
-
-
