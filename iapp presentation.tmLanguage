@@ -1079,7 +1079,7 @@
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>source.iapp_impl</string>
+							<string>source.iapp.impl</string>
 						</dict>
 					</array>
 				</dict>

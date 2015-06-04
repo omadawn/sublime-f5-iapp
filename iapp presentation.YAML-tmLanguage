@@ -585,7 +585,7 @@ repository:
       end: (?=})
       patterns:
       - include: '#comments'
-      - include: 'source.iapp_impl' # You can include a separate language by specifying it's scope name. Note the missing initial pound.
+      - include: 'source.iapp.impl' # You can include a separate language by specifying it's scope name. Note the missing initial pound.
 
   # class:
   #   name: meta.class.java
