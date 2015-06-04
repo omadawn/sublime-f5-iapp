@@ -8,6 +8,10 @@
 		<string>iapp_pres</string>
 		<string>iapp_presentation</string>
 	</array>
+	<key>foldingEndMarker</key>
+	<string>^\s*\}</string>
+	<key>foldingStartMarker</key>
+	<string>\{\s*$</string>
 	<key>name</key>
 	<string>F5 iApp Presentation</string>
 	<key>patterns</key>

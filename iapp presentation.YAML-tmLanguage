@@ -8,10 +8,9 @@ uuid: b6965f69-91d4-4b71-a789-f5531cd568a4
 
 # General notes: The highlighting seems to be triggered mostly by the first word in the name. keyword, entitiy, storage (for things we want to store and highlight later like variables and type definitions.)
 # Sublime text doesn't appear to have any documentation on this functionality but since the syntax definition functionality comes from textmate perhaps it is better documented there. http://manual.macromates.com/en/language_grammars#language_grammars
-#firstLineMatch: '^include\\s+.?/Common/f5.apl_common.?' # No firstLineMatch for the presentation section.
-
-# foldingStartMarker: \{\s*$
-# foldingEndMarker: ^\s*\}
+#firstLineMatch: '^include\\s+.?/Common/f5.apl_common.?' # No firstLineMatch for the presentation section. This will only work if I add a combined syntax.
+foldingStartMarker: \{\s*$
+foldingEndMarker: ^\s*\}
 
 #keyEquivalent: ^~J # Don't know if we should/could come up with an equivalent for these.
 
@@ -19,41 +18,12 @@ uuid: b6965f69-91d4-4b71-a789-f5531cd568a4
 # However that is all this section does, highlighting. In order to have the grammar definition perform a bit of a syntax checking role (For example in this one a section object cannot be embeded in any other object only at the root) 
 # scopes need to be defined. Scopes are defined in the repository section below.
 patterns:
-# - captures:
-#     '1': {name: keyword.control.iappp}
-#     '2': {name: support.class.iappp}
-#   match: ^\s*(include)\s+("?[A-Za-z_][A-Za-z0-9_-]*)\b
-
-# Top level objects
-
-# Matched braces to get them working. 
-# - include: '#matched-braces'
-
 - include: '#comments'
-
-# Creating sub objects and adding them here. Later they become only valid within sections or optionals
-# - include: '#messages'
-# - include: '#strings'
-# - include: '#passwords'
-
-# - include: '#choice-types'
-# - include: '#tables'
-# - include: '#rows'
-
 - include: '#sections'
-
-# Brace lists just for now.
-#- include: '#brace-list'
-
 - include: '#optionals'
-
 - include: '#text-definitions'
-
 # everything else should remain unmatched
 - include: '#illegals'
-
-
-
 
 # This is where you define scopes. I.E. where does one block of code start and end. Where within that scope are other scopes valid. For example below a choice object starts with choice <name>. After that it may 
 # contain a 'default' scope, a 'display' scope a 'tcl-databindings' scope or a choice body. The tcl-databindings scope is only valid within a choice type (choice, editchoice, multichoice.)
@@ -161,6 +131,7 @@ repository:
     patterns:
       - include: '#all-strings'
 
+# A failed attempt at a more accurate brace-list
   # brace-list:
   #   comment: Matches a pair of braces defining a list. I.E. { "Yes", "No", "Maybe" }
   #   begin: '{'
@@ -200,10 +171,6 @@ repository:
   #   match: (\"\w*\")
   #   name: string.quoted.listelement.iappp
 
-
-
-
-    #TODO: Expand this to include how they can have a couple of quoted strings and maybe a brace list.
   td-variable-definitions:
     comment: Variable names inside of a text definition
     begin: '^\s*([\w\.]*)'
@@ -217,7 +184,6 @@ repository:
     - include: '#comments'
     - include: '#brace-list'
     - include: '#illegals'
-
 
   text-definitions:
     comment: Defines the text-definition element
@@ -280,9 +246,6 @@ repository:
       captures:
         '1': {name: keyword.property.required.iappp}
 
-#Using this as an end definition causes sublime text to crash
-# end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?=\})) # This might be working
-
   messages:
     comment: Messages display un-editable text to the user.
     begin: (?<=(?:^|\s|\"|\}))(message)\b
@@ -302,8 +265,6 @@ repository:
     # Then also accept a double quoted string if the message is defined here instead of in the text section.
     - include: '#double-strings'
     - include: '#comments'
-
-
 
   strings:
     comment: Strings are single text boxes which take user input.
@@ -325,20 +286,6 @@ repository:
         '1': {name: storage.type.string.iappp}
     - include: '#comments'
 
-  # strings:
-  #   comment: The APL string element
-  #   begin: (?=\bstring)
-  #   beginCaptures:
-  #     '1': {name: keyword.control.string.iappp}
-  #   end: ((?=(string|password|choice|editchoice|multichoice|table|row|message|section|optional|text|include|define))|(?=\})) #Ends when it is followed by another element or a close paren
-  #   endCaptures:
-  #     '0': {name: punctuation.tcl.end.iappp}
-  #   patterns:
-  #   - name: meta.tcl.identifier.iappp
-  #     match: (string)\b
-  #     captures:
-  #       '1': {name: keyword.control.string.iappp}
-
   passwords:
     comment: Passwords are like strings except instead of displaying the typed text they obfuscate it. Some systems like the built in logging do their best to not log the contents either.
     # begin: (?<=(?:^|\s|\"|\}))(password)\s+([A-Za-z_][A-Za-z0-9_-]*)\s*
@@ -355,7 +302,6 @@ repository:
       match: \b([A-Za-z_][A-Za-z0-9_-]*)\b
       captures:
         '0': {name: storage.type.password.iappp}
-
 
   # So really choice is the word choice, some spaces, the name of the choice object, Optionally some space and a default object, optionally some space and a display object, optionally some space and a definition object {"yes","no"}, optionally a tcl databinding object.
   choices:
@@ -388,8 +334,6 @@ repository:
         patterns:
         - include: '#double-strings'
         - include: '#comments'
-
-
 
   editchoices:
     comment: Editchoices are like choices except the user can also simply type a choice instead of choosing from those available.
@@ -453,7 +397,6 @@ repository:
     - include: '#choices'
     - include: '#editchoices'
     - include: '#multichoices'
-
 
   tables:
     comment: Tables group other objects together in a way that allows users to add additional lines. They are like rows which can be extended.
@@ -594,11 +537,6 @@ repository:
       end: (?=})
       patterns:
       - include: '#optional-body'
-
-  # optional-condition:
-  #   comment: The contents of an optionals condition statement
-  #   patterns:
-  #   - include: '#comments'
       
   matched-braces:
     comment: Matches a pair of braces anywhere. Since matched-braces includes matched-braces this ultimately works.
@@ -649,13 +587,6 @@ repository:
       - include: '#comments'
       - include: 'source.iapp_impl' # You can include a separate language by specifying it's scope name. Note the missing initial pound.
 
-
-
-
-
-
-
-
   # class:
   #   name: meta.class.java
   #   begin: (?=\w?[\w\s]*(?:class|(?:@)?interface|enum)\s+\w+)
@@ -701,8 +632,6 @@ repository:
   #   - include: '#annotations'
   #   - include: '#storage-modifiers'
   #   - include: '#code'
-
-
 
   # Globally invalid/incorrect stuff.
   # Need to figure out how to get mismatched stuff added here.
