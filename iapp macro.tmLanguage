@@ -176,7 +176,7 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>source.iapp_impl</string>
+	<string>source.iapp.macro</string>
 	<key>uuid</key>
 	<string>9d4d0087-24ff-4519-b8cd-8a4e995e88b7</string>
 </dict>

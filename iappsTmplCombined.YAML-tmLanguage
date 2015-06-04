@@ -1,0 +1,348 @@
+# [PackageDev] target_format: plist, ext: tmLanguage
+---
+name: F5 iApps Template Combined
+scopeName: source.iapp
+fileTypes: [tmpl, iapp, iapp_template]
+uuid: b4b50bb3-2d85-4dd2-89e8-674675070160
+
+# The combined syntax is not a replacement for the stand alone syntaxes. It will infact simply rely on the other three.
+
+#firstLineMatch: 'TBD'
+
+foldingStartMarker: \{\s*$
+foldingEndMarker: ^\s*\}
+
+patterns:
+- include: '#comments'
+- include: '#tmsh-scripts'
+- include: '#template'
+
+
+repository:
+
+################  GLOBAL ELEMENTS  ################
+# Global elements are things like strings and comments which are not APL specific. Any APL specific objects are defined in the APL ELEMENTS section below.
+
+  comments:
+    comment: Matches TCL style comments and empty TCL style 'block comment.' Quotes intentional.
+    patterns:
+    - name: meta.comment.standalone
+      match: \s*((#).*$\n?)
+      captures:
+        '1': {name: comment.line.pound.iappi}
+        '2': {name: punctuation.definition.comment.iappi}
+        # Commenting out because I'm pretty sure APL doesn't allow if so the if 0 syntax won't help.
+    # - name: comment.block.empty.iappi
+    #   comment: Completely empty block comments won't match the in-line syntax below due to the begin/end syntax. (I think they won't)
+    #   match: \s*(if\s+0\s+\{\})
+    #   captures:
+    #     '1': {name: punctuation.definition.comment.iappi}
+    - include: '#comments-inline'
+
+  comments-inline:
+    comment: Matches TCL style comments and TCL style 'block comment.' Quotes intentional.
+    patterns:
+      # Commenting out because I'm pretty sure APL doesn't allow if so the if 0 syntax won't help.
+    # - name: comment.block.iappi
+    #   begin: \s*if\s+0\s+\{
+    #   end: \}
+    #   captures:
+    #     '0': {name: punctuation.definition.comment.iappi}
+    # - match: .+((;\s*#).*$\n?) #This might not be valid with the semi-colon.
+    - match: .+((;\s*#).*$) #This might not be valid with the semi-colon.
+      captures:
+        '1': {name: comment.line.semi-pound.iappi}
+        '2': {name: punctuation.definition.comment.iappi}
+
+############ All of these items might be found within the root of the template definition.
+  # Stuff which can be found in the application template
+  # actions { } or actions replace-all-with { }
+  # description none
+  # ignore-verification false
+  # partition Common
+  # prerequisite-errors none
+  # requires-bigip-version-max none
+  # requires-bigip-version-min 11.4.0
+  # requires-modules none
+  # signing-key none
+  # tmpl-checksum none
+  # tmpl-signature pRz1JdJ/9WeXEWBNp78UnvpE1IyLIBoB1a2DMQPXtuH9BetYXohVcSQOoVrh5ypbDxfK06Eel66xa2mQWFbMN1LSBHjWu5nZL5bOxoI7KrZXxumQngTbNQFlUwaq2OQpnmMHtV/cpCbti4+bsJ6bTm6lwcLwByO8/t3lxze91TimP4TI2abSCH/CoFf7s+F5Dv8+3Ie/raZFZD+OahpijZth3EOvxirKsyOZqjlV4jYqV0DYR4dp5n0ivMc1QD1oDlzDdbbwzyjbs2mZ2JIesm0+dIzUuMhJ4OaEororTGtaNkZEeP4WnM6ikWet0YUQbdFxcf7FNvy1mUXDacVCFg==
+  # total-signing-status one-cert-signed
+  # verification-status signature-verified
+
+  # Most of these are defined here just so I can validate that they are valid only within the template definition body (as opposed to the optional tclsh script) they should probably be handled in parameters otherwise.
+  description:
+    comment: Matches the description tag
+
+  ignore-verification:
+    comment: Matchest the ignore-verification tag
+
+  partition:
+    comment: Matchest the partition tag
+  
+  prerequisite-errors:
+    comment: Matchest the prerequisite-errors tag
+  
+  requires-bigip-version-max:
+    comment: Matchest the requires-bigip-version-max tag
+  
+  requires-bigip-version-min:
+    comment: Matchest the requires-bigip-version-min tag
+  
+  requires-modules:
+    comment: Matchest the requires-modules tag
+  
+  signing-key:
+    comment: Matchest the signing-key tag
+  
+  tmpl-checksum:
+    comment: Matchest the tmpl-checksum tag
+  
+  tmpl-signature:
+    comment: Matchest the tmpl-signature tag
+  
+  total-signing-status:
+    comment: Matchest the total-signing-status tag
+  
+  verification-status:
+    comment: Matchest the verification-status tag
+
+  html-help:
+    comment: The html-help definition section.
+    # begin: \b(html-help)\s+\{
+    begin: (?=\bhtml-help)
+    # captures:
+    #   '1': {name: keyword.control.html-help.iapp}
+    end: '}'
+    patterns:
+    - name: meta.html-help.identifier.appp
+      match: (html-help)\b
+      captures:
+        '1': {name: keyword.control.html-help.iappp}
+    - name: meta.html-help.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: 'text.html.basic' # for now
+
+  implementation:
+    comment: The implementation script definition section.
+    # begin: \b(implementation)\s+\{
+    begin: (?=\bimplementation)
+    # captures:
+    #   '1': {name: keyword.control.implementation.iapp}
+    end: '}'
+    patterns:
+    - name: meta.implementation.identifier.appp
+      match: (implementation)\b
+      captures:
+        '1': {name: keyword.control.implementation.iappp}
+    - name: meta.implementation.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: 'source.iapp.impl'
+
+  macro:
+    comment: The macro or templatized iRules definition section.
+    # begin: \b(macro)\s+\{
+    begin: (?=\bmacro)
+    # captures:
+    #   '1': {name: keyword.control.macro.iapp}
+    end: '}'
+    patterns:
+    - name: meta.macro.identifier.appp
+      match: (macro)\b
+      captures:
+        '1': {name: keyword.control.macro.iappp}
+    - name: meta.macro.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: 'source.iapp.macro'
+
+  presentation:
+    comment: The presentation or APL definition section.
+    # begin: \b(presentation)\s+\{
+    # captures:
+    #   '1': {name: keyword.control.presentation.iapp}
+    begin: (?=\bpresentation)
+    end: '}'
+    patterns:
+    - name: meta.presentation.identifier.appp
+      match: (presentation)\b
+      captures:
+        '1': {name: keyword.control.presentation.iappp}
+    - name: meta.presentation.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: 'source.iapp.presentation'
+
+
+  ## Can be included in the definition section
+
+  role-acl:
+    comment: The role-acl definition.
+    #role-acl { admin manager resource-admin }
+
+  run-as:
+    comment: The run-as setting.
+    # run-as none
+
+# sections:
+#     comment: Defines a section element
+#     begin: (?=\bsection)
+#     beginCaptures:
+#       '1': {name: keyword.control.section.iappp}
+#     end: '}'
+#     endCaptures:
+#       '0': {name: punctuation.section.section.end.iappp}
+#     patterns:
+#     - name: meta.section.identifier.appp
+#       match: (section)\s+([A-Za-z_][A-Za-z0-9_-]*)\b
+#       captures:
+#         '1': {name: keyword.control.section.iappp}
+#         '2': {name: storage.type.section.iappp}
+#     - name: meta.section.body.java
+#       begin: '{'
+#       end: (?=})
+#       patterns:
+#       - include: '#section-body'
+
+  definition:
+    comment: The definitions section. Really the main portion of the template definition.
+    # begin: \b(definition)\s+\{
+    begin: (?=\bdefinition)
+    # captures:
+    #   '1': {name: keyword.control.definition.iapp}
+    end: '}'
+    # endCaptures:
+    #   '0': {name: punctuation.section.actions.end.iapp}
+    patterns:
+    - name: meta.definition.identifier.appp
+      match: (definition)\b
+      captures:
+        '1': {name: keyword.control.definition.iappp}
+    - name: meta.definition.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: '#definition-body'
+
+  definition-body:
+    comment: The body of the definition.
+    patterns:
+    - include: '#html-help'
+    - include: '#implementation'
+    - include: '#macro'
+    - include: '#presentation'
+    - include: '#role-acl'
+    - include: '#run-as'
+
+  actions:
+    comment: Matchest the actions definition which contains the implementation, help, presenation and macro sections.
+    begin: (?=\bactions)
+    beginCaptures:
+      '1': {name: keyword.control.actions.iapp}
+    end: '}'
+    # endCaptures:
+    #   '0': {name: punctuation.section.actions.end.iapp}
+    patterns:
+    - name: meta.section.identifier.appp
+      match: (actions)\s+(?:"replace-all-with")?
+      captures:
+        '1': {name: keyword.control.actions.iapp}
+    - name: meta.actions.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: '#actions-body'
+
+  actions-body:
+    comment: The actions body. Basically just includes the definitions and a couple of administrative settings.
+    patterns:
+    - include: '#definition'
+
+
+  template:
+    comment: The template definition
+    # begin: ((create|modify)\s+)?(sys\s+(?:application\s+)?template)\s+([\w\.]*)
+    begin: (sys\s+(?:application\s+)?template)\s+([\w\.]*)
+    # begin: \b(sys\s+application\s+template)\s+([\w\.]*)
+    beginCaptures:
+      '1': {name: keyword.control.application-template.iapp}
+      # '2': {name: entity.name.type.application-template.iapp}
+      '2': {name: storage.type.tmsh-script.iapp}
+    end: '}'
+    # endCaptures:
+    #   '0': {name: punctuation.section.actions.end.iapp}
+    patterns:
+    - name: meta.template.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      - include: '#template-body' #Until we create a tmsh scripting syntax.
+
+# sys application template f5.microsoft_exchange_2010_2013_cas.v1.5.0 {
+
+  template-body:
+    comment: The body of an iApps template.
+    patterns:
+    - include: '#actions'
+    - include: '#description'
+    - include: '#ignore-verification'
+    - include: '#partition'
+    - include: '#prerequisite-errors'
+    - include: '#requires-bigip-version-max'
+    - include: '#requires-bigip-version-min'
+    - include: '#requires-modules'
+    - include: '#signing-key'
+    - include: '#tmpl-checksum'
+    - include: '#tmpl-signature'
+    - include: '#total-signing-status'
+    - include: '#verification-status'
+
+  tmsh-scripts:
+    comment: It is possible to include a TMSH Script at the beginning of an iApps template definition. Possibly multiple.
+    begin: \b(cli\s+script)\s+([\w\.]*)
+    beginCaptures:
+      '1': {name: keyword.control.actions.iapp}
+      # '2': {name: entity.name.type.tmsh-script.iapp}
+      '2': {name: storage.type.tmsh-script.iapp}
+    end: '}'
+    # endCaptures:
+    #   '0': {name: punctuation.section.actions.end.iapp}
+    patterns:
+    - name: meta.tmsh-script.body.iapp
+      begin: '{'
+      end: (?=})
+      patterns:
+      # - include: 'source.tcl' # This actually makes it worse.
+      - include: 'source.iapp.impl' #Until we create a tmsh scripting syntax.
+
+# might start with this section which is just tmsh script syntax.
+# cli script f5.iapp.1.1.3.cli { }
+
+# Will include this stuff
+# sys application template thisTemplate {
+#     actions replace-all-with {
+#         definition {
+#             html-help {
+#                 <!-- insert html help text -->
+#             }
+#             implementation {
+#                 # insert tmsh script
+#             }
+#             macro {
+#             }
+#             presentation {
+#                 # insert apl script
+#             }
+#         }
+#     }
+#     description none
+#     requires-bigip-version-max none
+#     requires-bigip-version-min none
+#     requires-modules none
+# }

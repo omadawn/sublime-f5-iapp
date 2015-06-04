@@ -723,7 +723,7 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>source.iapp_impl</string>
+	<string>source.iapp.impl</string>
 	<key>uuid</key>
 	<string>e998b591-e630-4583-86bd-b5714d50dd79</string>
 </dict>
