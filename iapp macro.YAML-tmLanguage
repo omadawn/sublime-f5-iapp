@@ -1,7 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 ---
 name: F5 iApp Macro
-scopeName: source.iapp_impl
+scopeName: source.iapp.macro
 fileTypes: [iappm, iapp_macro]
 uuid: 9d4d0087-24ff-4519-b8cd-8a4e995e88b7
 
