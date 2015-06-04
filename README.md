@@ -15,6 +15,23 @@ cd ~/Library/Application\ Support/Sublime\ Text\ 2/Packages/
 git clone https://github.com/bitwisecook/sublime-f5-iapp.git
 ```
 
+Then modify the syntax specific preferences for this syntax.
+First make sure you have an APL syntax file open and Go to:
+Preferences -> Settings - More -> Syntax Specific - User
+And make sure it looks like this:
+
+```
+{
+	"extensions":
+	[
+		"iappp"
+	],
+	"color_scheme": "/Users/<Your User Name>/Library/Application Support/Sublime Text 2/Packages/<What you named this package>/iappPresentationColor.tmTheme"
+}
+```
+
+If the file is empty you can simply add the color scheme line within curly braces.
+
 ## Known Issues
 For Implementations section
 Not all keywords included
