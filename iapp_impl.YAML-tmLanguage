@@ -1,7 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 ---
 name: F5 iApp Implementation
-scopeName: source.iapp.impl
+scopeName: source.f5.iapp.impl
 fileTypes: [iappi, iapp_impl]
 uuid: e998b591-e630-4583-86bd-b5714d50dd79
 

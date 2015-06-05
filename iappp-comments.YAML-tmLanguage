@@ -1,7 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmPreferences
 name: Presentation Comments
 uuid: 8d642c78-f113-460c-b910-b000b9955ec5
-scope: source.iapp.presentation
+scope: source.f5.iapp.presentation
 settings:
   shellVariables:
   - name: TM_COMMENT_START

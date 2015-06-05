@@ -4,6 +4,6 @@
 }
 ]]></content>
     <tabTrigger>if</tabTrigger>
-    <scope>source.iapp_impl</scope>
+    <scope>source.f5.iapp.impl</scope>
     <description>if...</description>
 </snippet>

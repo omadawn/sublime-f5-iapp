@@ -1079,7 +1079,7 @@
 						</dict>
 						<dict>
 							<key>include</key>
-							<string>source.iapp.impl</string>
+							<string>source.f5.iapp.impl</string>
 						</dict>
 					</array>
 				</dict>
@@ -1224,7 +1224,7 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>source.iapp.presentation</string>
+	<string>source.f5.iapp.presentation</string>
 	<key>uuid</key>
 	<string>b6965f69-91d4-4b71-a789-f5531cd568a4</string>
 </dict>

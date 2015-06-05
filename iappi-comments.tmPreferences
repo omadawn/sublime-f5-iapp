@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Implementation Comments</string>
 	<key>scope</key>
-	<string>source.iapp_impl</string>
+	<string>source.f5.iapp.impl</string>
 	<key>settings</key>
 	<dict>
 		<key>shellVariables</key>

@@ -307,7 +307,7 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>source.iapp.impl</string>
+							<string>source.f5.iapp.impl</string>
 						</dict>
 					</array>
 				</dict>
@@ -348,7 +348,7 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>source.iapp.macro</string>
+							<string>source.f5.iapp.macro</string>
 						</dict>
 					</array>
 				</dict>
@@ -399,7 +399,7 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>source.iapp.presentation</string>
+							<string>source.f5.iapp.presentation</string>
 						</dict>
 					</array>
 				</dict>
@@ -579,7 +579,7 @@
 					<array>
 						<dict>
 							<key>include</key>
-							<string>source.iapp.impl</string>
+							<string>source.f5.iapp.impl</string>
 						</dict>
 					</array>
 				</dict>
@@ -597,7 +597,7 @@
 		</dict>
 	</dict>
 	<key>scopeName</key>
-	<string>source.iapp</string>
+	<string>source.f5.iapp</string>
 	<key>uuid</key>
 	<string>b4b50bb3-2d85-4dd2-89e8-674675070160</string>
 </dict>

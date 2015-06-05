@@ -4,6 +4,6 @@
 }
 ]]></content>
     <tabTrigger>multichoice</tabTrigger>
-    <scope>source.iapp.presentation</scope>
+    <scope>source.f5.iapp.presentation</scope>
     <description>multichoice...</description>
 </snippet>

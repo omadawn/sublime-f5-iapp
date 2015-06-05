@@ -1,7 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 ---
 name: F5 iApp Presentation
-scopeName: source.iapp.presentation
+scopeName: source.f5.iapp.presentation
 fileTypes: [iappp, iapp_pres, iapp_presentation]
 uuid: b6965f69-91d4-4b71-a789-f5531cd568a4
 
@@ -585,7 +585,7 @@ repository:
       end: (?=})
       patterns:
       - include: '#comments'
-      - include: 'source.iapp.impl' # You can include a separate language by specifying it's scope name. Note the missing initial pound.
+      - include: 'source.f5.iapp.impl' # You can include a separate language by specifying it's scope name. Note the missing initial pound.
 
   # class:
   #   name: meta.class.java

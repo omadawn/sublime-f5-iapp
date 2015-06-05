@@ -1,7 +1,7 @@
 # [PackageDev] target_format: plist, ext: tmLanguage
 ---
 name: F5 iApps Template Combined
-scopeName: source.iapp
+scopeName: source.f5.iapp
 fileTypes: [tmpl, iapp, iapp_template]
 uuid: b4b50bb3-2d85-4dd2-89e8-674675070160
 
@@ -141,7 +141,7 @@ repository:
       begin: '{'
       end: (?=})
       patterns:
-      - include: 'source.iapp.impl'
+      - include: 'source.f5.iapp.impl'
 
   macro:
     comment: The macro or templatized iRules definition section.
@@ -159,7 +159,7 @@ repository:
       begin: '{'
       end: (?=})
       patterns:
-      - include: 'source.iapp.macro'
+      - include: 'source.f5.iapp.macro'
 
   presentation:
     comment: The presentation or APL definition section.
@@ -177,7 +177,7 @@ repository:
       begin: '{'
       end: (?=})
       patterns:
-      - include: 'source.iapp.presentation'
+      - include: 'source.f5.iapp.presentation'
 
 
   ## Can be included in the definition section
@@ -319,7 +319,7 @@ repository:
       end: (?=})
       patterns:
       # - include: 'source.tcl' # This actually makes it worse.
-      - include: 'source.iapp.impl' #Until we create a tmsh scripting syntax.
+      - include: 'source.f5.iapp.impl' #Until we create a tmsh scripting syntax.
 
 # might start with this section which is just tmsh script syntax.
 # cli script f5.iapp.1.1.3.cli { }

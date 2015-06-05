@@ -4,6 +4,6 @@
 }
 ]]></content>
     <tabTrigger>row</tabTrigger>
-    <scope>source.iapp.presentation</scope>
+    <scope>source.f5.iapp.presentation</scope>
     <description>row...</description>
 </snippet>

@@ -5,7 +5,7 @@
 	<key>name</key>
 	<string>Presentation Comments</string>
 	<key>scope</key>
-	<string>source.iapp.presentation</string>
+	<string>source.f5.iapp.presentation</string>
 	<key>settings</key>
 	<dict>
 		<key>shellVariables</key>

@@ -4,6 +4,6 @@
 }
 ]]></content>
     <tabTrigger>for</tabTrigger>
-    <scope>source.iapp_impl</scope>
+    <scope>source.f5.iapp.impl</scope>
     <description>for...</description>
 </snippet>
